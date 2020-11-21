@@ -3,4 +3,4 @@ site:
 
 serve: site
 	echo Running Python3 http.server ...
-	python3 -m http.server --directory _site/
+	python3 -m http.server --directory docs/

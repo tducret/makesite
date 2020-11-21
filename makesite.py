@@ -162,10 +162,10 @@ def make_list(posts, dst, list_layout, item_layout, **params):
 
 
 def main():
-    # Create a new _site directory from scratch.
-    if os.path.isdir('_site'):
-        shutil.rmtree('_site')
-    shutil.copytree('static', '_site')
+    # Create a new docs directory from scratch.
+    if os.path.isdir('docs'):
+        shutil.rmtree('docs')
+    shutil.copytree('static', 'docs')
 
     # Default parameters.
     params = {
@@ -187,11 +187,11 @@ def main():
 
     # Create blog posts.
     blog_posts = make_pages('content/blog/*.md',
-                            '_site/{{ slug }}/index.html',
+                            'docs/{{ slug }}/index.html',
                             post_layout, blog='blog', **params)
 
     # Create blog list pages.
-    make_list(blog_posts, '_site/index.html',
+    make_list(blog_posts, 'docs/index.html',
               home_layout, item_layout, blog='blog', **params)
 
 
