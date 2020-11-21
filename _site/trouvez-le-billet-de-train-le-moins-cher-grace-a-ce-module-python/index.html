@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>Trouvez le billet de train le moins cher grâce à ce module Python - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>Trouvez le billet de train le moins cher grâce à ce module Python</h1>
+<p>Il vous arrive de rechercher des billets de train, et ne pas être capable d'ajouter tous les critères et filtres qui vous intéressent ?</p>
+<p><strong>Ça m'arrive très souvent.</strong></p>
+<p>Par exemple, je cherche des billets de train pour :</p>
+<ul>
+<li>Toulouse → Paris</li>
+<li>2 adultes + 1 enfant avec une carte Enfant+</li>
+<li>3 vélos</li>
+<li>pendant les vacances de la Toussaint</li>
+<li>le moins cher</li>
+<li>le plus court</li>
+</ul>
+<p>Un vrai casse-tête en utilisant les sites traditionnels.</p>
+<p>Vous ne pourrez pas obtenir l'ensemble des billets disponibles sur une période donnée par exemple. C'est dommage si vous n'avez pas de contrainte sur la date de départ...</p>
+<p>Au mieux, vous aurez un <a href="https://www.oui.sncf/calendar">calendrier de prix</a>, avec le meilleur prix pour chaque jour du mois.</p>
+<p><img src="/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/calendrier_prix.png" alt="Calendrier des prix Toulouse → Paris en septembre 2018 sur Oui.sncf" /></p>
+<p>Malheureusement, ce calendrier n'est disponible que pour les trajets les plus courants. Si vous sortez des cas prévus, gare à l'erreur :</p>
+<p><img src="/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/erreur_calendrier_prix.png" alt="Message renvoyé quand on essaie d'obtenir le calendrier des prix pour Toulouse -&gt; Cannes" /></p>
+<p>De même, il n'est pas possible d'obtenir le calendrier des prix en prenant en compte une carte de réduction Enfant+, ou de réserver un emplacement vélo 😞</p>
+<p>L'autre solution, c'est de :</p>
+<ul>
+<li>rechercher les billets de train à partir de la date de départ,</li>
+<li>de cliquer sur la recherche des trains suivants,</li>
+<li>de cliquer sur la recherche des trains suivants,</li>
+<li>de cliquer sur la recherche des trains suivants,</li>
+<li>...</li>
+<li>jusqu'à la date de fin.</li>
+</ul>
+<p>Bref, une tâche longue et pénible...</p>
+<p><strong>Ce sont justement mes critères pour démarrer un nouveau projet !</strong></p>
+<h1>Le choix du service</h1>
+<p>Pour obtenir les tarifs de billets de train en France, deux solutions existent : le portail officiel <a href="https://www.oui.sncf/">Oui.sncf</a> (anciennement Voyage-sncf) et <a href="https://www.trainline.eu/">Trainline</a> (anciennement Capitaine Train).</p>
+<p>Au-delà du site web, chacun propose une application mobile.</p>
+<p><strong>C'est de ce côté que je regarde pour créer un module Python.</strong></p>
+<p>En effet, contrairement à leurs sites web, l'application mobile fait des appels &quot;en clair&quot; à leurs API internes. Il suffit d'utiliser l'application, et d'espionner les échanges avec leurs serveurs. J'utilise pour ce type d'analyse le logiciel <a href="https://www.charlesproxy.com/">Charles</a>, mais il existe également <a href="https://mitmproxy.org/">mitmproxy</a>.</p>
+<blockquote>
+<p>Vous pouvez en savoir plus en lisant l'article sur le [reverse engineering de l'application mobile ING Direct]({{ site.baseurl }}{% post_url 2018-05-24-reverse-engineering-de-l-application-mobile-ing-direct %}).</p>
+</blockquote>
+<p>Bref, après avoir regardé les possibilités des deux applications, mon choix s'est orienté sur <strong>Trainline</strong>.</p>
+<p>L'application mobile de Oui.sncf ne permet pas de réserver des billets de train avec emplacement vélo... C'est rédibitoire pour moi :)</p>
+<h1>Un module Python</h1>
+<p>La suite du projet consiste alors à analyser les requêtes entre l'application et les serveurs de Trainline. On regarde :</p>
+<ul>
+<li>les URL (exemple : https://api.serveur.com/rechercher_trains)</li>
+<li>les paramètres d'entrée et leur format (exemple : {&quot;gare_depart&quot;: &quot;Toulouse&quot;, &quot;gare_arrivee&quot;: &quot;Bordeaux&quot;})</li>
+<li>la logique des échanges (quelle requête est exécutée après telle autre...)</li>
+<li>les réponses (exemple : {[&quot;heure_depart&quot;: &quot;8:58&quot;, &quot;heure_arrivee&quot;: &quot;10:57&quot;, &quot;prix&quot;: 15.0}])</li>
+</ul>
+<p>Ensuite, on développe un module Python qui va permettre d'envoyer ces requêtes à partir de fonctions.
+Ce module masque complétement le contenu des requêtes et le format de l'API.</p>
+<hr />
+<p>En suivant cette logique <em>(et après quelques heures de développement)</em>, <strong>le <a href="https://pypi.org/project/trainline/">module trainline</a> est né</strong> !</p>
+<p>Voici un exemple d'utilisation :</p>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+import trainline
+
+resultats = trainline.search(
+	departure_station=&quot;Toulouse&quot;,
+	arrival_station=&quot;Bordeaux&quot;,
+	from_date=&quot;15/10/2018 08:00&quot;,
+	to_date=&quot;15/10/2018 21:00&quot;)
+
+print(resultats.csv())
+</code></pre>
+<p>On obtient alors :</p>
+<pre><code class="language-csv">departure_date;arrival_date;duration;number_of_segments;price;currency;transportation_mean;bicycle_reservation
+15/10/2018 08:00;15/10/2018 10:55;02h55;1;5,0;EUR;coach;unavailable
+15/10/2018 08:00;15/10/2018 10:50;02h50;1;4,99;EUR;coach;unavailable
+15/10/2018 08:19;15/10/2018 10:26;02h07;1;20,5;EUR;train;10,0
+15/10/2018 08:19;15/10/2018 10:26;02h07;1;65,0;EUR;train;unavailable
+</code></pre>
+<p>Beaucoup plus simple que de composer les requêtes HTTP à la main, non?</p>
+<h1>Testons le module sur un exemple</h1>
+<p>Reprenons l'exemple de l'introduction :</p>
+<ul>
+<li>Toulouse → Paris</li>
+<li>2 adultes + 1 enfant avec une carte Enfant+</li>
+<li>3 vélos</li>
+<li>pendant les vacances de la Toussaint</li>
+<li>le moins cher</li>
+<li>le plus court</li>
+</ul>
+<p>Le module va nous aider dans cette recherche.</p>
+<blockquote>
+<p><em>Les vacances de la Toussaint 2018 vont du samedi 20 octobre au lundi 5 novembre.</em></p>
+</blockquote>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+import trainline
+
+Papa = trainline.Passenger(birthdate=&quot;01/01/1986&quot;)
+Maman = trainline.Passenger(birthdate=&quot;01/01/1987&quot;)
+Enfant = trainline.Passenger(birthdate=&quot;01/01/2012&quot;,
+cards=[trainline.ENFANT_PLUS])
+
+resultats = trainline.search(
+	passengers=[Papa, Maman, Enfant],
+	departure_station=&quot;Toulouse&quot;,
+	arrival_station=&quot;Paris&quot;,
+	from_date=&quot;20/10/2018 08:00&quot;,
+	to_date=&quot;15/11/2018 21:00&quot;,
+	bicycle_with_or_without_reservation=True)
+
+print(resultats.csv())
+</code></pre>
+<p>On obtient alors tous les trains possibles pendant cette période au format csv.</p>
+<p>Il suffit alors de récupérer ces résultats et les ouvrir sur un tableur pour les trier, et obtenir le billet le moins cher.</p>
+<blockquote>
+<p>Nota : J'ai ajouté la colonne <strong>prix_total</strong>, correspondant au prix des billets de train + le prix de la réservation des emplacements vélos. Soit : price + bicycle_reservation</p>
+</blockquote>
+<p><img src="/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/resultats_tries_sous_excel.png" alt="Tri des résultats par prix total sous Excel" /></p>
+<p><strong>Bilan</strong> : deux dates intéressantes, le 23 et 24 octobre, avec un prix total de 35€ pour nous 3 et nos vélos ! (le prix maximum étant de 301,50€...)</p>
+<p>Une fois le billet repéré, rendez-vous sur <a href="https://www.trainline.eu/">Trainline</a> pour le réserver.</p>
+<p><img src="/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/resultat_trainline.png" alt="Le billet de train sur Trainline" /></p>
+<h1>Une commande dans le terminal</h1>
+<p>Le module Python Trainline est pratique, mais il nécessite de développer ou d'adapter un petit programme pour chaque recherche.</p>
+<p>Il doit y avoir plus simple...</p>
+<p>En complément du module, j'ai donc créé l'utilitaire <code>trainline_cli.py</code>, avec une interface en ligne de commande (CLI).</p>
+<p>Cela s'utilise donc dans le terminal, comme un <code>ls</code> ou un <code>grep</code>.</p>
+<p>Si je recherche les billets de train de Toulouse à Bordeaux pour les 2 prochaines heures, je tape dans le terminal :</p>
+<pre><code class="language-bash">trainline_cli.py --departure=&quot;Toulouse&quot; --arrival=&quot;Bordeaux&quot; --next=2hours
+</code></pre>
+<p>Ou encore plus court (une fois que vous serez habitués) :</p>
+<pre><code class="language-bash">trainline_cli.py -d Toulouse -a Bordeaux -n 2h
+</code></pre>
+<p>Vous obtiendrez les résultats au format csv.</p>
+<p><img src="/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/utilisation_CLI_trainline.svg" alt="Utilisation de l'outil en ligne de commande" /></p>
+<p><img src="https://media.giphy.com/media/NGSbD5vI6lUvC/giphy-downsized.gif" alt="Locomotive" /></p>
+<p>Rendez-vous sur <a href="https://github.com/tducret/trainline-python">la page Github du projet Trainline</a> pour plus de détails sur le module Python et l'outil (installation, exemples d'utilisation).</p>
+<hr />
+<p>Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail <a href="http://bit.ly/newsletter-tducret">en vous inscrivant à la newsletter</a></p>
+
+<footer></footer>
+</html>

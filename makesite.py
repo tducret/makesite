@@ -35,6 +35,7 @@ import sys
 import json
 import datetime
 
+from commonmark import commonmark
 
 def fread(filename):
     """Read file and close the file."""
@@ -99,13 +100,7 @@ def read_content(filename):
 
     # Convert Markdown content to HTML.
     if filename.endswith(('.md', '.mkd', '.mkdn', '.mdown', '.markdown')):
-        try:
-            if _test == 'ImportError':
-                raise ImportError('Error forced by test')
-            import commonmark
-            text = commonmark.commonmark(text)
-        except ImportError as e:
-            log('WARNING: Cannot render Markdown in {}: {}', filename, str(e))
+        text = commonmark(text)
 
     # Update the dictionary with content and RFC 2822 date.
     content.update({
@@ -186,46 +181,18 @@ def main():
         params.update(json.loads(fread('params.json')))
 
     # Load layouts.
-    page_layout = fread('layout/page.html')
+    home_layout = fread('layout/home.html')
     post_layout = fread('layout/post.html')
-    list_layout = fread('layout/list.html')
     item_layout = fread('layout/item.html')
-    feed_xml = fread('layout/feed.xml')
-    item_xml = fread('layout/item.xml')
 
-    # Combine layouts to form final layouts.
-    post_layout = render(page_layout, content=post_layout)
-    list_layout = render(page_layout, content=list_layout)
-
-    # Create site pages.
-    make_pages('content/_index.html', '_site/index.html',
-               page_layout, **params)
-    make_pages('content/[!_]*.html', '_site/{{ slug }}/index.html',
-               page_layout, **params)
-
-    # Create blogs.
+    # Create blog posts.
     blog_posts = make_pages('content/blog/*.md',
-                            '_site/blog/{{ slug }}/index.html',
+                            '_site/{{ slug }}/index.html',
                             post_layout, blog='blog', **params)
-    news_posts = make_pages('content/news/*.html',
-                            '_site/news/{{ slug }}/index.html',
-                            post_layout, blog='news', **params)
 
     # Create blog list pages.
-    make_list(blog_posts, '_site/blog/index.html',
-              list_layout, item_layout, blog='blog', title='Blog', **params)
-    make_list(news_posts, '_site/news/index.html',
-              list_layout, item_layout, blog='news', title='News', **params)
-
-    # Create RSS feeds.
-    make_list(blog_posts, '_site/blog/rss.xml',
-              feed_xml, item_xml, blog='blog', title='Blog', **params)
-    make_list(news_posts, '_site/news/rss.xml',
-              feed_xml, item_xml, blog='news', title='News', **params)
-
-
-# Test parameter to be set temporarily by unit tests.
-_test = None
+    make_list(blog_posts, '_site/index.html',
+              home_layout, item_layout, blog='blog', **params)
 
 
 if __name__ == '__main__':

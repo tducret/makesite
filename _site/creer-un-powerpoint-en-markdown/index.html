@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>Créer un Powerpoint en Markdown - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>Créer un Powerpoint en Markdown</h1>
+<p>Je vais vous expliquer ici un moyen efficace pour créer une présentation Powerpoint à partir de texte au format Markdown.</p>
+<p>J'aime beaucoup le <a href="https://fr.wikipedia.org/wiki/Markdown">Markdown</a>. Avec quelques <code>*</code> et <code>[</code>, on fait des miracles.
+Je l'utilise d'ailleurs pour rédiger ce blog (avec l'aide de <a href="https://jekyllrb.com/">Jekyll</a>).</p>
+<blockquote>
+<p>Si vous ne connaissez pas encore le Markdown, je vous encourage à lire <a href="https://openclassrooms.com/fr/courses/1304236-redigez-en-markdown">cet article sur openclassrooms</a></p>
+</blockquote>
+<p>Je pense que tous les développeurs apprécieront <strong>la puissance de l'outil</strong> <em>(et la possibilité de s'éloigner de Powerpoint</em> 😱*)*.</p>
+<h1>L'outil</h1>
+<p>Des développeurs chez Google ont créé <a href="https://github.com/gsuitedevs/md2googleslides">md2googleslides</a>.</p>
+<p>Il suffit de créer votre présentation au format Markdown (on en reparle juste après), et d'exécuter <code>md2gslides presentation.md</code>.</p>
+<p>Votre présentation est alors générée et déposée sur votre Google Drive.</p>
+<h3>Le hic</h3>
+<p>Cet outil nécessite d'installer <a href="https://nodejs.org">Node.js</a> sur votre PC, ainsi que son gestionnaire de paquets <a href="https://www.npmjs.com/">npm</a> pour télécharger le package <code>md2gslides</code>.</p>
+<p>Si ça n'est pas un problème pour vous, rendez-vous <a href="https://github.com/gsuitedevs/md2googleslides#installation-and-usage">ici</a> pour la procédure d'installation officielle.</p>
+<p>Si, comme moi, vous n'aimez pas devoir installer tout un tas d'outils et de librairies sur votre PC, je vous ai préparé quelque-chose 😉</p>
+<h2>Et si on utilisait Docker?</h2>
+<p>Ça n'est plus <a href="/docker/2018/07/04/distribuez-vos-commandes-dans-des-conteneurs-docker.html">un secret</a>, j'aime bien utiliser Docker pour éviter ces problèmes de gestion de dépendances.</p>
+<p>Du coup, je vous ai concocté une <a href="https://hub.docker.com/r/thibdct/md2gs">image Docker</a> qui contient <strong>md2gslides</strong> et toutes ses dépendances.</p>
+<p>Le tout dans une image <a href="https://microbadger.com/images/thibdct/md2gs">de moins de 65 Mo</a> <em>(à titre indicatif, l'image de Node fait environ <a href="https://microbadger.com/images/node">330 Mo</a>... et c'est sans <code>md2gslides</code>!)</em>.</p>
+<blockquote>
+<p>Si vous êtes curieux de savoir comment on peut faire d'aussi petites images Docker, allez jeter un œil aux images <a href="https://github.com/GoogleContainerTools/distroless">Distroless</a> de Google et à mon <a href="https://github.com/tducret/md2gs/blob/master/Dockerfile">Dockerfile</a></p>
+</blockquote>
+<p>Pas mal, non?</p>
+<p><strong>Et c'est pas fini...</strong></p>
+<p>Vous ne souhaitez pas faire de <code>docker run --rm -it md2gs [...]</code> à chaque exécution de la commande? Je vous comprends.</p>
+<p>Que diriez-vous de pouvoir utiliser cette image Docker comme une simple commande?</p>
+<p><strong>Votre vœu est exaucé</strong> 🎁</p>
+<p>Je vous ai préparé le script <code>md2gs</code>, qu'il suffira d'appeler de cette manière :</p>
+<p><code>md2gs presentation.md</code></p>
+<h1>Installation de md2gs</h1>
+<p>Comme pour le reste, j'ai tâché de vous faciliter l'installation au maximum.</p>
+<p>Un ligne de commande :</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/tducret/md2gs/master/get-md2gs.sh | sh
+</code></pre>
+<blockquote>
+<p>Plus d'infos sur le <a href="https://github.com/tducret/md2gs#md2gs">repo Github</a></p>
+</blockquote>
+<hr />
+<h1>Démo</h1>
+<p>Créez un fichier <code>presentation.md</code> et ajoutez le contenu suivant :</p>
+<pre><code>---
+
+# Voici le titre de ma présentation
+
+## Et mon sous-titre
+
+---
+
+# Titre de la section
+
+---
+
+# Titre de la slide
+
+On peut alors ajouter le contenu souhaité.
+
+Et même avoir des styles différents :
+
+* *En italique*
+* **En gras**
+* ~~Barré~~
+* `print(&quot;Du code&quot;)`
+
+Et des emojis :heart:
+</code></pre>
+<p>Puis, dans le répertoire de la présentation, exécutez :</p>
+<pre><code class="language-bash">md2gs presentation.md
+</code></pre>
+<hr />
+<blockquote>
+<h3>Première utilisation</h3>
+<p>A la première utilisation, la commande vous demandera d'autoriser l'utilisation de votre Google Drive.</p>
+<p>Vous devriez avoir dans votre terminal quelque-chose du genre:</p>
+</blockquote>
+<pre><code class="language-bash">Authorize this app by visiting this url:
+https://accounts.google.com/o/oauth2/v2/auth?access_type=offline
+[...]
+</code></pre>
+<blockquote>
+<p>Recopiez le lien fourni, et ouvrez-le dans votre navigateur.</p>
+<p><img src="/assets/article_images/2019-05-12-creer-un-powerpoint-en-markdown/autorisation.png" alt="Fenêtre d'autorisation dans le navigateur" /></p>
+<p>Cliquez sur <strong>Autoriser</strong>.</p>
+<p><img src="/assets/article_images/2019-05-12-creer-un-powerpoint-en-markdown/code_connexion.png" alt="Code de connexion fourni par Google" /></p>
+<p>Recopiez le code généré dans le terminal.</p>
+<p><img src="/assets/article_images/2019-05-12-creer-un-powerpoint-en-markdown/terminal.png" alt="Contenu du terminal après ces étapes" /></p>
+<p>Le lien vers la présentation est ensuite renvoyé par la commande.</p>
+<p><strong>⚠️ Pas de panique, cette étape d'autorisation n'est à faire qu'à la première utilisation.</strong></p>
+</blockquote>
+<hr />
+<p>Donc, si on reprend, vous exécutez :</p>
+<pre><code class="language-bash">md2gs presentation.md
+</code></pre>
+<p>La présentation est alors générée et publiée sur votre Google Drive. La commande vous renvoie un lien vers la présentation.</p>
+<p>Ouvrez ce lien dans le navigateur et <strong>admirez votre travail</strong>...</p>
+<p>Si le thème par défaut vous semble un peu terne, cliquez dans le menu <strong>Diapositive &gt; Changer de thème...</strong> et choisissez-en un autre.</p>
+<p><strong>Et voilà le travail ⬇️</strong></p>
+<p><img src="/assets/article_images/2019-05-12-creer-un-powerpoint-en-markdown/presentation_sur_google_slides.png" alt="La présentation dans Google Slides" /></p>
+<h1>🚀 Un peu plus loin</h1>
+<p>Il est possible de faire bien plus avec <code>md2gslides</code>.</p>
+<p>Vous pourrez ajouter :</p>
+<ul>
+<li>des images et vidéos</li>
+<li>un nouvel arrière-plan</li>
+<li>des blocs de code 🤓</li>
+<li>des formules de maths</li>
+<li>des tableaux</li>
+<li>...</li>
+</ul>
+<p>Pour plus d'explications, allez voir le <a href="https://github.com/gsuitedevs/md2googleslides">repo officiel</a> et leur <a href="https://raw.githubusercontent.com/gsuitedevs/md2googleslides/master/examples/example.md">fichier Markdown d'exemple</a> <em>(bien plus complet que celui de cet article)</em>.</p>
+<h1>Conclusion</h1>
+<p>Vous savez maintenant <strong>créer une présentation sur Google Slides à partir d'un fichier en Markdown</strong>. Si vous êtes développeur, il peut être intéressant de gérer ce fichier <strong>dans un repository Git</strong>, pour suivre ses modifications ou collaborer facilement.</p>
+<p>On peut aussi imaginer la <strong>génération automatique</strong> d'une présentation.</p>
+<p>A partir des éléments dans votre base Jira, vous pourriez faire générer le bilan de fin de sprint par exemple <em>(certains comprendront de quoi je parle</em> 🤡*)*.</p>
+
+<footer></footer>
+</html>

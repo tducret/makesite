@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>amazon2csv, ou comment filtrer les produits d'Amazon dans Excel - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>amazon2csv, ou comment filtrer les produits d'Amazon dans Excel</h1>
+<p>Il vous est certainement arrivé de vouloir vous former dans un nouveau domaine. Pour cela, vous chercher les meilleurs livres sur le sujet.
+Très vite, vous êtes submergés par des dizaines (voire centaines) de livres, sans trop savoir lesquels sélectionner.</p>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/recherche_bash_programming.png" alt="Recherche sur Amazon" /></p>
+<p>Pour faciliter ma sélection, je vais sur Amazon, je tape mes mots-clés, et je regarde les livres les mieux notés.
+C'est là que ça commence à devenir compliqué...
+Amazon propose plusieurs possibilités de tris (pertinence, prix, note moyenne, dernière nouveauté).
+Parfait, on peut classer par note moyenne...</p>
+<p>Pas tout à fait.</p>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_bizarre.png" alt="Tri sensé être par note" /></p>
+<p>D'une part, le tri semble parfois un peu bizarre.
+D'autre part, un livre avec un seul avis à 5 étoiles se retrouvera plus haut qu'un autre avec 50 et une moyenne de 4.7.
+On sent bien que cela n'a pas la même valeur.</p>
+<p>Si seulement on pouvait récupérer les résultats de recherches sur Amazon pour pouvoir les exploiter comme bon nous semble...</p>
+<h1>Les premières tentatives</h1>
+<p>Bien que j'aime beaucoup coder, je regarde quand même les solutions clé-en-main disponibles.
+Comme on le dit souvent dans le développement logiciel, &quot;on ne va pas réinventer la roue !&quot;.
+Et là, surprise... Un projet sur Github attire rapidement mon attention.</p>
+<h2>Bottlenose</h2>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/bottlenose.png" alt="Bottlenose" /></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Bottlenose is a thin, well-tested, maintained, and powerful Python wrapper over the Amazon Product Advertising API. There is practically no overhead, and no magic (unless you add it yourself).</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>Il faut noter un détail important dans la description :</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Before you get started, make sure you have both Amazon Product Advertising and AWS accounts. AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_ASSOCIATE_TAG are all from your Amazon Associate Account.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>En clair, ce package Python utilise l'API officielle d'Amazon, dédiée aux affiliés.</p>
+<p>Je regarde les services offerts par cette API dans le <a href="https://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_GettingStarted.html">Getting started</a>. Cela me plait bien :)</p>
+<h2>Inscription à Amazon Associate</h2>
+<p>L'<a href="https://docs.aws.amazon.com/AWSECommerceService/latest/DG/becomingAssociate.html">inscription</a> prend un peu de temps, et il faut renseigner pour quel site ou application sera utilisé le programme partenaire Amazon. En règle général, ce programme permet de faire des liens vers des produits vendus sur Amazon et obtenir une commission si un visiteur de votre site l'achète.
+Je m'inscris avec l'adresse du blog : https://www.tducret.com.</p>
+<p>Ça n'est pas terminé, il faut maintenant s'inscrire à l'<a href="https://docs.aws.amazon.com/AWSECommerceService/latest/DG/becomingDev.html">API Product Advertising</a></p>
+<p>Malheureusement, mes essais s'arrêtent brutalement ce matin-là...</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>&quot;L'enregistrement pour l'API de publicité de produit (Product Advertising) est disponible uniquement pour les partenaires qui ont été examinés et qui ont été acceptés de manière définitive dans le programme Partenaires.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>OK, il va falloir patienter.</p>
+<h2>La douche froide</h2>
+<p>Quelques heures plus tard, je reçois cet email :</p>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/refus_amazon.png" alt="Email de refus d'Amazon" /></p>
+<p>Ouch...</p>
+<h1>A l'ancienne</h1>
+<p>Je décide donc de changer d'approche. Tant pis (ou tant mieux), je vais développer mon outil.
+Pour cela, je fais une recherche sur Amazon dans mon navigateur, et je regarde le code source de la page de résultats.
+Ce que je cherche pour cet outil : le titre du livre, sa note, le nombre de commentaires et son URL.</p>
+<p><code>Ctrl+F</code>, je recherche dans le code source le titre d'un des livres de la page de résultats :</p>
+<pre><code class="language-html">&lt;h2 data-attribute=&quot;Web Scraping with Python: Collecting Data from the Modern Web&quot; data-max-rows=&quot;0&quot; class=&quot;a-size-medium s-inline  s-access-title  a-text-normal&quot;&gt;Web Scraping with Python: Collecting Data from the Modern Web&lt;/h2&gt;
+</code></pre>
+<p>Et un peu plus loin, la note :</p>
+<pre><code class="language-html">&lt;i class=&quot;a-icon a-icon-star a-star-4&quot;&gt;
+&lt;span class=&quot;a-icon-alt&quot;&gt;4.2 out of 5 stars&lt;/span&gt;&lt;/i&gt;
+</code></pre>
+<p>Et encore un peu plus loin, le nombre de commentaires :</p>
+<pre><code class="language-html">&lt;a class=&quot;a-size-small a-link-normal a-text-normal&quot; href=&quot;https://www.amazon.com/Web-Scraping-Python-Collecting-Modern/dp/1491910291/ref=sr_1_4?s=books&amp;amp;ie=UTF8&amp;amp;qid=1528108096&amp;amp;sr=1-4&amp;amp;keywords=python+scraping#customerReviews&quot;&gt;51&lt;/a&gt;
+</code></pre>
+<p>Pas mal, mais c'est un peu éparpillé (potentiellement plus difficile à extraire par le code).
+J'essaie alors de voir la page de résultats mobile.</p>
+<p><strong>Astuce</strong> : On peut se faire passer pour un smartphone avec son navigateur de bureau en  changeant son &quot;User Agent&quot; (c'est une sorte d'identifiant du navigateur qui est envoyé au site web que vous consultez). J'utilise le plugin <a href="http://useragentswitcher.org/">User Agent Switcher</a>, disponible sur tous les navigateurs web.</p>
+<p><strong>BINGO !</strong></p>
+<p>Le code source est plus synthétique. On retrouve notamment la note et le nombre de commentaires regroupés :</p>
+<pre><code class="language-html">&lt;div class=&quot;a-icon-row a-size-small&quot;&gt;&lt;i class=&quot;a-icon a-icon-star-medium a-star-medium-4-5&quot;&gt;&lt;span class=&quot;a-icon-alt&quot;&gt;4.3 out of 5 stars&lt;/span&gt;&lt;/i&gt;&lt;span&gt; (142)&lt;/span&gt;&lt;/div&gt;
+</code></pre>
+<h2>La création de l'outil amazon2csv</h2>
+<p>Le besoin est clair, la faisabilité semble validée, c'est le moment de développer l'outil.
+Je décide de produire une sortie au format CSV, car on pourra ainsi utiliser Excel pour trier ou filtrer les résultats.</p>
+<p>Cela ressemble à ça :</p>
+<pre><code class="language-csv">Product title,Rating,Number of customer reviews,Product URL
+&quot;Python Crash Course: A Hands-On, Project-Based Introduction to Programming&quot;,4.5,309,https://www.amazon.com/Python-Crash-Course-Hands-Project-Based/dp/1593276036
+&quot;A Smarter Way to Learn Python: Learn it faster. Remember it longer.&quot;,4.8,144,https://www.amazon.com/Smarter-Way-Learn-Python-Remember-ebook/dp/B077Z55G3B
+</code></pre>
+<p>Le projet est disponible sur <a href="https://github.com/tducret/amazon-scraper-python">Github</a>.</p>
+<p>Il est installable très simplement, via :</p>
+<pre><code class="language-bash">pip3 install -U amazonscraper
+</code></pre>
+<p>En entrée, on peut saisir des mots-clés, un nombre maximum de résultats et un choix de séparateur CSV (par défaut, c'est la virgule, mais en français Excel préfère le point-virgule).</p>
+<pre><code class="language-bash">amazon2csv --keywords=&quot;bash programming&quot; --separator=&quot;;&quot; --maxproductnb=2
+</code></pre>
+<p>On peut également récupérer les résultats en indiquant directement l'URL consultée dans le navigateur.
+C'est particulièrement intéressant si vous avez ajouté des filtres sur Amazon : sur le type de produit (livre physique, ebook) ou un auteur par exemple.
+Le résultat est renvoyé dans le terminal, mais il peut très facilement être sauvegardé dans un fichier.</p>
+<pre><code class="language-bash">amazon2csv -u &quot;https://www.amazon.fr/s/ref=nb_sb_noss?__mk_fr_FR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;url=search-alias%3Daps&amp;field-keywords=bash+programming&quot; --separator=&quot;;&quot; &gt; bash_programming.csv
+</code></pre>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_excel_nb_commentaires_bash_programming.png" alt="Affichage de bash_programming.csv sous Excel" /></p>
+<p>On peut alors s'amuser à faire un tri &quot;sur-mesure&quot;. Je décide d'ajouter une colonne avec <strong>ma note</strong>.
+Je me contente d'une formule basée sur la note (B2) et le nombre de commentaires (C2).</p>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/formule_excel_ma_note.png" alt="La formule Excel de ma note" /></p>
+<p>On obtient un tri qui est plus réaliste. Les livres notés 5 mais avec très peu de commentaires se retrouvent bien plus bas.</p>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_excel_ma_note_bash_programming.png" alt="Tri Excel avec ma note" /></p>
+<h2>Ça n'est pas que pour les livres...</h2>
+<p>Ah oui, j'oubliais... J'utilise cet outil pour des livres, mais cela fonctionne avec tous les produits vendus sur Amazon (DVD, matériel, jouets, etc.).</p>
+<p>Démo rapide : les 100 thrillers les plus populaires :</p>
+<pre><code class="language-bash">amazon2csv -u &quot;https://www.amazon.fr/s/ref=sr_nr_p_n_feature_sixteen__11?fst=as%3Aoff&amp;rh=n%3A405322%2Cp_n_binding_browse-bin%3A383376011%2Cp_n_feature_sixteen_browse-bin%3A5704749031&amp;bbn=405322&amp;ie=UTF8&amp;qid=1528089053&amp;rnid=5704717031&quot; -m 100 --separator=&quot;;&quot; &gt; thriller.csv
+</code></pre>
+<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/top_100_thrillers.png" alt="Top 100 thrillers" /></p>
+<p><img src="https://media.giphy.com/media/ofEEPYCz2ZOog/giphy.gif" alt="Thriller" /></p>
+<p>N'hésitez pas à ajouter une étoile au projet Github si cela vous a plu (<a href="https://github.com/tducret/amazon-scraper-python">★ → amazon-scraper-python</a>)</p>
+
+<footer></footer>
+</html>

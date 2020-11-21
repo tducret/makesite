@@ -1,4 +1,3 @@
-_site
 *.pyc
 __pycache__
 .coverage

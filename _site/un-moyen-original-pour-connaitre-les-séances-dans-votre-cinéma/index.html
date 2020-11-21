@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>Un moyen original pour connaitre les séances dans votre cinéma - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>Un moyen original pour connaitre les séances dans votre cinéma</h1>
+<p>Dans cet article, je vous explique comment répondre à la question <em>&quot;Y-a quoi au ciné aujourd'hui?&quot;</em><strong>... en moins de 5 secondes.</strong></p>
+<p>Je vous ai concocté un petit outil qui permet de récupérer les séances de votre cinéma. Tout cela, sans pub, sans clic... <strong>directement dans le terminal.</strong></p>
+<h1>Comment ça marche?</h1>
+<h2>Installation</h2>
+<p>L'outil est disponible sous forme de package Python ou d'image Docker.</p>
+<p>Du coup, vous pourrez l'installer avec un simple <code>pip3 install -U allocine</code> ou <code>docker pull thibdct/seances</code>.</p>
+<p>Allez faire un tour sur <a href="https://github.com/tducret/allocine-python#installation">la page du projet allocine-python</a> pour plus d'infos.</p>
+<blockquote>
+<p>Nota : <a href="https://github.com/tducret/allocine-python/blob/master/Dockerfile">l'image Docker</a> a été bichonnée. Elle utilise une image de base <a href="https://github.com/GoogleContainerTools/distroless">Distroless de Google</a>. Ce qui veut dire qu'elle est de très petite taille (on parle d'environ 50 Mo, contre plusieurs centaines avec l'image Python classique).</p>
+</blockquote>
+<h2>Utilisation</h2>
+<p>La seule chose à connaitre pour utiliser l'outil, c'est <strong>l'identifiant de votre cinéma</strong>.
+Pour cela, rendez-vous sur sa page allociné, et récupérez l'identifiant dans l'URL.</p>
+<p>Par exemple pour le Gaumont Labège : P0645.</p>
+<p><img src="/assets/article_images/2019-01-16-un-moyen-original-pour-connaitre-les-s%C3%A9ances-dans-votre-cin%C3%A9ma/snapshot_theater_id.png" alt="Récupération de l'identifiant du cinéma sur Allociné" /></p>
+<p>Ensuite, retour dans le terminal : <code>seances.py --help</code> vous donnera les options possibles (ou <code>docker run -it --rm thibdct/seances seances --help</code> si vous utilisez l'image Docker).</p>
+<p>Quelques exemples, pour le cinéma Gaumont Labège :</p>
+<ul>
+<li>les séances du jour : <code>seances.py P0645</code></li>
+<li>les séances du 19/01/2019 : <code>seances.py P0645 --jour 19/01/2019</code></li>
+<li>les séances dans deux jours <code>seances.py P0645 -j+2</code></li>
+<li>les séances pour les 7 prochains jours : <code>seances.py P0645 --semaine</code></li>
+<li>les séances du jour avec des entrelignes entre chaque film (pour la lisibilité) : <code>seances.py P0645 --entrelignes</code></li>
+</ul>
+<p><img src="/assets/article_images/2019-01-16-un-moyen-original-pour-connaitre-les-s%C3%A9ances-dans-votre-cin%C3%A9ma/couverture.png" alt="Exemple d'affichage du programme des séances" /></p>
+<p>Vous pouvez donc voir de manière très synthétique l'ensemble des séances de votre cinéma. Le tout dans un joli tableau, avec une colonne par heure (plus facile pour comparer les films d'une même tranche horaire).</p>
+<p><strong>Mieux, la deuxième colonne vous donne la note donnée au film par les spectateurs.</strong></p>
+<p>Enfin, quand il y a beaucoup de séances, n'hésitez pas à utiliser l'option <code>--entrelignes</code>.</p>
+<p><img src="/assets/article_images/2019-01-16-un-moyen-original-pour-connaitre-les-s%C3%A9ances-dans-votre-cin%C3%A9ma/seances_avec_entrelignes.png" alt="Avec les entrelignes" /></p>
+<hr />
+<p>N'hésitez pas à aller faire un tour sur <a href="https://github.com/tducret/allocine-python#installation">la page du projet allocine-python</a>.</p>
+<p><img src="https://media.giphy.com/media/pcLw0jLBelkbK/giphy.gif" alt="Bonne séance !" /></p>
+<p>📨 <strong>Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail <a href="http://bit.ly/newsletter-tducret">en vous inscrivant à la newsletter</a></strong></p>
+
+<footer></footer>
+</html>

@@ -1,5 +1,15 @@
-<article>
-<h1><a href="{{ base_path }}/{{ blog }}/{{ slug }}/">{{ title }}</a></h1>
-<p class="meta">Published on {{ date }} by <b>{{ author }}</b></p>
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>{{ title }} - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>{{ title }}</h1>
 {{ content }}
-</article>
+<footer></footer>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>Comment j'automatise mes tests avec Pytest, Travis et Coveralls - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>Comment j'automatise mes tests avec Pytest, Travis et Coveralls</h1>
+<p>Lorsque l'on crée un projet en Python, on peut avoir tendance à se focaliser sur le développement des fonctionnalités.</p>
+<ul>
+<li>J'ai un objectif,</li>
+<li>je réfléchis aux fonctions à écrire,</li>
+<li>je les code,</li>
+<li>je les teste,</li>
+<li>je modifie ce qui pose problème,</li>
+<li>et je continue jusqu'à avoir le comportement souhaité.</li>
+</ul>
+<p>Le problème avec cette approche, c'est qu'en reprenant le code quelques semaines ou mois plus tard, on ne se souvient plus de certains détails du contenu. On continue, on fait des évolutions... et <strong>CRAC</strong>. Ça ne fonctionne plus comme avant 😭</p>
+<p><strong>D'où vient le problème ?</strong></p>
+<p>Il va falloir analyser pas-à-pas le déroulement du programme, fonction après fonction, paramètre d'entrée après paramètre d'entrée, ligne après ligne...</p>
+<p>Au mieux, avec un debugger (<a href="https://docs.python.org/3/library/pdb.html">pdb</a> en Python). Au pire, en faisant des <strong>print</strong> à des endroits stratégiques (je le sais, je fais pareil !).</p>
+<p>La tentation est alors grande de jeter l'éponge si le problème est vraiment complexe.</p>
+<p>Je vais vous expliquer dans cet article comment améliorer la maintenabilité de votre code. Ou dit différemment, vous faciliter la vie !</p>
+<p>Vous apprendrez comment ajouter des tests à votre projet, qui seront joués automatiquement lors d'une modification de votre code. Vous pourrez ainsi détecter la moindre régression, au plus vite.
+En fin d'article, vous pourrez même vérifier le taux de couverture de vos tests. C'est-à-dire le pourcentage de lignes de code par lesquels passent vos tests.</p>
+<h1>Pytest</h1>
+<p>Tester son programme revient à écrire des appels aux fonctions de votre programme, et indiquer la valeur attendue en sortie.</p>
+<p>Un outil est alors utilisé pour lire les tests, les exécuter, et vous prévenir si le comportement attendu n'est pas le bon.</p>
+<p>Supposons qu'on ait écrit une fonction pour faire la somme de deux nombres :</p>
+<pre><code class="language-python">def addition(a, b):
+    return a+b
+</code></pre>
+<p>Le test pourrait être le suivant :</p>
+<pre><code class="language-python">def test_addition_2_plus_3():
+    assert addition(2,3) == 5
+</code></pre>
+<p><code>assert</code> est une notion qui revient souvent dans les tests logiciels. En français, on peut le traduire par <em>affirmer que</em>. On utilise <code>assert</code> en indiquant derrière le test à vérifier. Il doit être vrai pour que le teste passe.</p>
+<pre><code class="language-python">def test_addition_4_plus_5():
+    assert addition(4,5) == 10
+    # Ce test va échouer !
+</code></pre>
+<p>Il existe plusieurs outils pour exécuter les tests en Python.</p>
+<p>Voici mon <strong>TOP 3</strong> :</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/unittest.html">unittest</a> : l'outil intégré à Python</li>
+<li><a href="http://nose.readthedocs.io/en/latest/">nose</a> : l'outil qui étend les fonctions de unittest</li>
+<li><a href="https://docs.pytest.org/en/latest/">pytest</a> : du même type que nose, mais avec une syntaxe différente</li>
+</ul>
+<p>Lors de mes recherches, <strong>pytest</strong> a retenu mon attention par sa syntaxe simple et sa compatibilité avec de nombreux outils externes (cf. Travis, que je vous présente un peu plus bas).</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/livre_pytest.jpg" alt="Python Testing with pytest" /></p>
+<p>Un très bon livre lui est d'ailleurs dédié : <a href="http://pythontesting.net/books/pytest/">Python Testing with pytest</a>.</p>
+<p><strong>nose</strong> est vraiment comparable, et il revient à chacun de se faire sa propre idée.</p>
+<h2>Mise en place des tests</h2>
+<p>Par convention, on crée à la racine du projet un dossier <code>test</code>, dans lequel on crée des fichiers de tests du type <code>test_*.py</code> (un fichier par thème ou module). Cela permettra à <strong>pytest</strong> de les trouver tout seul.</p>
+<p>Voici à quoi ressemble la structure de mon projet <a href="https://github.com/tducret/amazon-scraper-python/">amazon-scraper-python</a> :</p>
+<pre><code class="language-bash">.
+├── .travis.yml
+├── Dockerfile
+├── LICENSE
+├── MANIFEST.in
+├── README.md
+├── amazon2csv.py
+├── amazonscraper
+│   ├── __init__.py
+│   ├── client.py
+├── pytest.ini
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+└── test
+    └── test_amazonscraper.py
+</code></pre>
+<p>On voit justement <code>test/test_amazonscraper.py</code>.</p>
+<p>Jeton un oeil à l'intérieur de <strong>test_amazonscraper.py</strong> :</p>
+<pre><code class="language-python">import amazonscraper
+
+def test_amazonscraper_get_products_with_keywords():
+
+    products = amazonscraper.search(
+                                keywords=&quot;Python&quot;,
+                                max_product_nb=10)
+
+    assert len(products) == 10
+</code></pre>
+<p>Ce test permet de vérifier que l'appel à la fonction de recherche (avec le mot-clé &quot;Python&quot; et un nombre de résultats maximal de 10) nous renvoie bien 10 résultats.</p>
+<p>Pour exécuter le test, on s'assure tout d'abord d'avoir installé <strong>pytest</strong> :</p>
+<pre><code class="language-bash">pip install -U pytest
+</code></pre>
+<p>On se place ensuite dans le répertoire du projet, et on lance la commande <code>pytest -v</code> (<em>v</em> est l'option <em>verbose</em> pour avoir plus de détails).</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_test_amazonscraper_get_products_with_keywords.png" alt="Résultat de la commande pytest" /></p>
+<h2>Mock</h2>
+<p><em>(ajouté le 26/11/2018)</em></p>
+<p><a href="https://docs.python.org/dev/library/unittest.mock.html"><code>Mock</code></a> est un moyen très pratique de tester des fonctions nécessitant des appels à d'autres librairies ou API. Celui-ci <strong>imite</strong> cette fonction en la remplaçant par une fonction de votre choix.</p>
+<p>Voici un exemple (récupéré <a href="https://rhodesmill.org/brandon/slides/2014-07-pyohio/clean-architecture/">ici</a>) qui remplace la requête vers un serveur web (ici une recherche de définition via l'API de DuckDuckGo) par une fonction interne qui renvoie une définition de notre choix.</p>
+<p>La fonction originale à tester :</p>
+<pre><code class="language-python">import requests
+
+def find_definition(word):
+    q = 'define ' + word
+    url = 'http://api.duckduckgo.com/?'
+    url += urlencode({'q': q, 'format': 'json'})
+    response = requests.get(url)     # &lt;== On va imiter cette fonction
+    data = response.json()           # &lt;== ainsi que celle-ci
+    definition = data[u'Definition']
+    if definition == u'':
+        raise ValueError('that is not a word')
+    return definition
+</code></pre>
+<p>Le test :</p>
+<pre><code class="language-python">from mock import patch
+
+class FakeRequestsLibrary(object):
+    def get(self, url):
+        self.url = url
+        return self
+    def json(self):
+        return self.data
+
+def test_find_definition():
+    fake = FakeRequestsLibrary()
+    fake.data = {u'Definition': u'abc'}
+    with patch('requests.get', fake.get):  # &lt;== On la remplace ici
+        definition = find_definition('testword')
+
+    assert definition == 'abc'
+    assert fake.url == (
+        'http://api.duckduckgo.com/'
+        '?q=define+testword&amp;format=json')
+</code></pre>
+<blockquote>
+<p>Cette possibilité de test sera particulièrement utile quand vous souhaiterez tester la logique de votre application sans dépendre d'un appel à une API externe (qui pourrait aussi allonger la durée du test).</p>
+</blockquote>
+<h2>Doctest</h2>
+<p>En plus des tests dans un fichier dédié (du type <code>test_*.py</code>), on peut écrire des tests directement dans le code.
+On les appelle les <strong>doctest</strong>.</p>
+<p>Dans le commentaire de description de la fonction (appelé également <em>docstring</em>), il suffit de décrire l'appel à tester (précédé de <code>&gt;&gt;&gt;</code>), et le retour attendu.</p>
+<p>Reprenons l'exemple de tout à l'heure, où l'on souhaite tester que la fonction <strong>addition</strong> est bien capable de faire <code>2+3 = 5</code> :</p>
+<pre><code class="language-python">def addition(a, b):
+    &quot;&quot;&quot; Fonction qui additionne 2 nombres
+    &gt;&gt;&gt; addition(2,3)
+    5
+    &quot;&quot;&quot;
+    return a+b
+</code></pre>
+<p>C'est très pratique, car en plus de donner un exemple d'utilisation pour documenter le code, on vient de créer un test automatisé.</p>
+<p>Il suffit alors d'appeler <code>pytest --doctest-modules</code> pour que ces doctests soient également joués.</p>
+<p>On peut également décrire des cas d'erreurs, par exemple :</p>
+<pre><code class="language-python">def addition(a, b):
+    &quot;&quot;&quot; Fonction qui additionne 2 nombres
+    &gt;&gt;&gt; addition(2,3)
+    5
+    &gt;&gt;&gt; addition(&quot;a&quot;,5)
+    Traceback (most recent call last):
+    ...
+    TypeError: must be str, not int
+    &quot;&quot;&quot;
+    return a+b
+</code></pre>
+<p><em>(les <code>...</code> entre <strong>Traceback</strong> et <strong>TypeError</strong> permettent de ne pas recopier intégralement l'erreur.)</em></p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_doctest_addition_OK.png" alt="Résultat de la commande pytest avec doctest : OK" /></p>
+<p>Pour vous montrer ce qui se passerait en cas d'échec d'un test (suite à une régression par exemple), je modifie la valeur attendue pour 2+3, en mettant 6.</p>
+<p>Voici le retour, qui indique clairement l'endroit où le test échoue.</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_doctest_addition_NOK.png" alt="Résultat de la commande pytest avec doctest : NOK" /></p>
+<h2>Travis</h2>
+<p>Nous avons désormais de bonnes bases pour que le code soit plus facile à maintenir. Il suffit d'exécuter régulièrement la commande <strong>pytest</strong> pour s'assurer que tout fonctionne correctement...</p>
+<p>Et si on pouvait également automatiser cette étape 🤔</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/travis.png" alt="Travis CI" /></p>
+<p>C'est ici qu'entre en jeu <a href="https://travis-ci.org/">Travis CI</a>.</p>
+<p>Le principe de tester régulièrement le code n'est pas nouveau : on parle d'intégration continue.</p>
+<p>Néanmoins, <strong>Travis</strong> présente l'avantage d'être très simple d'utilisation et gratuit pour les projets open source.</p>
+<p>Dans votre projet, vous rajoutez un fichier <code>.travis.yml</code>, avec les consignes d'installation et de lancement des tests.
+Voici à quoi ça ressemble pour un de mes projets :</p>
+<pre><code class="language-yml">language: python
+python:
+  - &quot;3.6&quot;
+# Commande pour installer votre code
+install:
+  - pip install .
+# Commandes pour installer les dépendances
+before_script:
+  - pip install -r requirements.txt
+# Commande pour exécuter les tests
+script:
+  - pytest
+</code></pre>
+<p>Rendez-vous ensuite sur <a href="https://travis-ci.org/">le site de Travis-CI</a> pour vous inscrire (via les identifiants de votre compte Github).</p>
+<p>Vous pourrez alors choisir les repository des projets Github à tester.</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/travis_selection_repository.png" alt="Sélection des projets à tester sur Travis" /></p>
+<p>Il suffit alors de faire un commit pour déclencher les tests sur Travis.</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/build_travis.png" alt="Visualisation du déroulement des tests sur travis-ci.org" /></p>
+<p>Et si jamais cela ne se passait pas comme prévu, vous recevez un petit mail :</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/mail_travis_build_broken.png" alt="Exemple de mail envoyé par Travis quand une modification de code provoque une erreur" /></p>
+<p>Ce n'est qu'un aperçu, les possibilités sont très nombreuses :</p>
+<ul>
+<li>plusieurs types de serveurs de tests</li>
+<li>plusieurs versions de Python</li>
+<li>dépôt du package généré sur Pypi</li>
+<li>déploiement automatique</li>
+<li>envoi de notifications (email, IRC, Slack, webhooks...)</li>
+</ul>
+<p>Plus d'infos sur <a href="https://docs.travis-ci.com/user/getting-started/">la documentation Travis</a></p>
+<h2>Coveralls</h2>
+<p>Un dernier point à regarder de près quand on fait des tests : la couverture de code.
+Il s'agit d'analyser par quelles lignes passent vos tests... et par quelles lignes ils ne passent pas.
+On fait alors un rapport entre le nombre de lignes <em>couvertes</em> et le nombre de lignes total.
+On obtient un pourcentage : le taux de couverture de code, qui donne une indication sur la qualité des tests sur le projet.
+Un projet avec 50% de taux de couverture de code donne une mauvaise image, car les tests mis en place passent seulement par la moitié des lignes de code. On risque de garder de nombreux morceaux de code obsolètes, sans le savoir, jusqu'au jour où...</p>
+<p>On peut faire cette analyse très facilement avec <strong>pytest</strong> et le plugin <strong>pytest-cov</strong>.</p>
+<pre><code class="language-bash">pip install pytest-cov
+</code></pre>
+<p>Exemple d'utilisation :</p>
+<pre><code class="language-bash">pytest --cov=myproj tests/
+
+-------------------- coverage: ... ---------------------
+Name                 Stmts   Miss  Cover
+----------------------------------------
+myproj/__init__          2      0   100%
+myproj/myproj          257     13    94%
+myproj/feature4286      94      7    92%
+----------------------------------------
+TOTAL                  353     20    94%
+</code></pre>
+<p>Pas mal du tout, mais on peut faire mieux !</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/coveralls.png" alt="Coveralls.io" /></p>
+<p>Un service existe sur le web pour faciliter cette analyse : <a href="http://coveralls.io/">Coveralls</a></p>
+<p>C'est également gratuit pour les projets open source, et on peut s'inscrire avec son compte Github.</p>
+<p>En connectant Coveralls à Travis, on peut générer l'analyse de couverture de code automatiquement.</p>
+<p>Pour cela, on ajoute simplement quelques lignes de plus dans <code>.travis.yml</code></p>
+<pre><code class="language-yml">language: python
+python:
+  - &quot;3.6&quot;
+# Commande pour installer votre code
+install:
+  - pip install .
+# Commandes pour installer les dépendances
+before_script:
+  - pip install -r requirements.txt
+  - pip install python-coveralls
+  - pip install pytest-cov
+# Commande pour exécuter les tests
+script:
+  - pytest
+# Commande pour envoyer les résultats de couverture de code à coveralls.io
+after_success:
+  coveralls
+</code></pre>
+<p>J'ai également ajouté un fichier <code>pytest.ini</code> au même endroit, pour que pytest puisse récupérer ses paramètres d'appel :</p>
+<pre><code>[pytest]
+addopts = --doctest-modules --cov amazonscraper
+</code></pre>
+<p>Après chaque commit sur Github, Travis va installer le code, exécuter tous mes tests, et envoyer la couverture de code à Coveralls. Je peux alors connaitre mon taux de couverture sur Coveralls, et analyser les lignes non couvertes :</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/coveralls_lignes_non_couvertes.png" alt="Lignes non couvertes sur Coveralls" /></p>
+<p>Dans mon cas, il s'agit d'un cas bien particulier : la gestion d'une exception en cas d'échec de communication SSL avec les serveurs d'Amazon. C'est donc difficile à tester de manière automatique (car ça n'est pas systématique).
+On peut néanmoins simuler ce comportement pour les tests à l'aide de <a href="#mock"><strong>Mock</strong></a>.</p>
+<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/badges_github.png" alt="Badges sur Github" /></p>
+<p><strong>BONUS</strong> : Vous pouvez alors afficher fièrement l'état des tests et la couverture de votre code, sur la page Github de votre projet. Les badges seront mis à jour dynamiquement à chaque modification de votre programme.</p>
+<p><img src="https://media.giphy.com/media/vq4q4LqJv3Qcg/giphy.gif" alt="Test successful" /></p>
+<p>Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail <a href="http://bit.ly/newsletter-tducret">en vous inscrivant à la newsletter</a></p>
+
+<footer></footer>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>Distribuez vos commandes dans des conteneurs Docker - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>Distribuez vos commandes dans des conteneurs Docker</h1>
+<p>Vous avez déjà voulu <strong>partager un de vos programmes</strong> ?</p>
+<p>Pas facile de le faire fonctionner sur différents systèmes d'exploitation. Pas évident de connaitre toutes les choses à installer avant pour pouvoir s'en servir.</p>
+<p>Dans cet article, je vais vous expliquer comment convertir une commande en un conteneur Docker.</p>
+<p><strong>Fini l'aléatoire</strong>, le conteneur s'exécutera de la même manière à chaque fois, et s'installera sur n'importe quel ordinateur en une ligne de commande.</p>
+<h1>Docker?</h1>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/docker.png" alt="Docker" /></p>
+<blockquote>
+<p>« Docker est un outil qui peut empaqueter une application et ses dépendances dans un conteneur isolé, qui pourra être exécuté sur n'importe quel serveur ». Ceci permet d'étendre la flexibilité et la portabilité d’exécution d'une application, que ce soit sur la machine locale, un cloud privé ou public, une machine nue, etc. <a href="https://fr.wikipedia.org/wiki/Docker_%28logiciel%29">(source Wikipedia)</a></p>
+</blockquote>
+<p>Si vous voulez en savoir plus, je vous invite à lire l'article <a href="https://www.cachem.fr/docker-revolution-conteneur/">Docker pour les nuls</a>.</p>
+<h1>Création du Dockerfile</h1>
+<p>Pour créer une image Docker (le modèle de vos conteneurs), on écrit un fichier <strong>Dockerfile</strong>. On prend une image de base comme point de départ (par exemple un OS Ubuntu), et l'on décrit les étapes à dérouler pour installer votre commande.</p>
+<p>Dans cet article, nous allons créer l'image Docker d'une commande Python 3.</p>
+<p>On va donc rechercher une image de départ qui contient Python 3 sur <a href="https://store.docker.com">le store Docker</a> (le catalogue des images Docker).</p>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/docker_store.png" alt="Docker store" /></p>
+<p>Un clic sur <strong>View Available Tags</strong> nous permet de voir les versions disponibles. Pour cet exemple, on choisit l'image <code>python:3</code></p>
+<p>Ainsi, le Dockerfile commencera par la ligne d'import suivante :</p>
+<pre><code class="language-dockerfile">FROM python:3
+</code></pre>
+<p>À partir de là, il faut imaginer que l'on se trouve sur un serveur vierge et que l'on souhaite installer la commande souhaitée.</p>
+<p>Ici, la commande utilisée pour cet article est installable via <code>pip</code>. On va donc indiquer la commande <code>pip install -U amazonscraper</code> dans le Dockerfile, en la précédant du mot-clé <code>RUN</code>, qui correspond aux commandes à exécuter lors de la construction de l'image Docker.</p>
+<pre><code class="language-dockerfile">FROM python:3
+
+RUN pip install -U amazonscraper
+</code></pre>
+<p>Vous pouvez bien-sûr ajouter d'autres commandes et fichiers si votre installation le nécessite.</p>
+<blockquote>
+<p>Vous trouverez plus de détails dans <a href="https://docs.docker.com/engine/reference/builder/">la documentation officielle du Dockerfile</a>.</p>
+</blockquote>
+<p>Ce Dockerfile pourrait être suffisant pour construire l'image. Néanmoins, il peut être intéressant de définir le script exécuté par défaut lors du lancement du conteneur. Cela réduit la longueur de la commande de lancement du conteneur. Ici, on souhaite utiliser la commande <code>amazon2csv.py</code> par défaut. On la rajoute donc dans le Dockerfile, précédée du mot-clé <code>ENTRYPOINT</code>.</p>
+<pre><code class="language-dockerfile">FROM python:3
+
+RUN pip install -U amazonscraper
+
+ENTRYPOINT [ &quot;amazon2csv.py&quot; ]
+</code></pre>
+<p><strong>Simple, non?</strong></p>
+<h2>Construction de l'image</h2>
+<p>Pour construire l'image Docker, il faut tout d'abord démarrer un terminal et se placer à l'endroit où se trouve le Dockerfile. On va alors lancer la commande suivante :</p>
+<pre><code class="language-bash">docker build -t amazon2csv .
+</code></pre>
+<p>où <em>amazon2csv</em> est le nom de l'image que je souhaite créer.</p>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/build_successful.png" alt="La construction de l'image s'est bien déroulée" /></p>
+<h1>Test de lancement d'un conteneur</h1>
+<p>Pour vérifier le fonctionnement du conteneur, on lance dans le terminal la commande suivante :</p>
+<pre><code class="language-bash">docker run -it --rm amazon2csv --help
+</code></pre>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/help_commande.png" alt="Lancement du conteneur" /></p>
+<p>On obtient bien l'aide de la commande amazon2csv.py.</p>
+<p>On peut également utiliser la commande pour faire une recherche sur Amazon des 10 premiers livres liés au développement Python (plus d'infos sur <a href="https://github.com/tducret/amazon-scraper-python/">la page du projet amazon-scraper-python</a>)</p>
+<pre><code class="language-bash">docker run -it --rm amazon2csv --keywords=&quot;Python programming&quot; --maxproductnb=10
+</code></pre>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/test_recherche_python_amazon2csv.png" alt="Recherche de &quot;Python programming&quot; sur Amazon" /></p>
+<p><strong>Ça fonctionne !</strong></p>
+<h2>Faciliter l'utilisation grâce à un alias</h2>
+<p>Pour ne pas avoir à taper systématiquement la commande de lancement du conteneur, on peut créer un <strong>alias</strong>. Pour cela, on ajoute dans son fichier <code>~/.bashrc</code> ou <code>~/.bash_profile</code> la ligne :</p>
+<pre><code class="language-bash">alias amazon2csv=&quot;docker run -it --rm amazon2csv&quot;
+</code></pre>
+<p>Quittez le terminal, et relancez-le (pour charger ce nouvel alias). Vous pouvez désormais démarrer un conteneur en tapant uniquement <em>amazon2csv</em>.</p>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/lancement_conteneur_via_alias.png" alt="Lancement du conteneur avec l'alias" /></p>
+<h2>Une autre option</h2>
+<p>Si vous souhaitez partager votre commande avec d'autres personnes, ou l'utiliser sur d'autres ordinateurs, vous pouvez publier votre image sur le <a href="https://hub.docker.com/">Docker Hub</a>.</p>
+<blockquote>
+<p>Pour en savoir plus, vous pouvez lire la partie <em>Publier des images sur Docker Hub</em> de l'article <a href="https://lucasvidelaine.wordpress.com/2018/01/29/utilisation-de-dockerhub/">Utilisation de Docker Hub</a>.</p>
+</blockquote>
+<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/amazon2csv_sur_docker_hub.png" alt="amazon2csv sur Docker Hub" /></p>
+<p>Une fois sur le hub, la récupération de votre image est alors très facile. Par notre exemple :</p>
+<pre><code class="language-bash">docker pull thibdct/amazon2csv
+</code></pre>
+<p>Il faut également savoir que si l'on demande l'exécution d'un conteneur dont l'image n'a pas été téléchargée (avec <code>docker run -it --rm amazon2csv --help</code> par exemple), docker va la télécharger sur le hub directement... pratique! Le <code>docker pull</code> est donc facultatif.</p>
+<p>Je vous vois venir :</p>
+<blockquote>
+<p>&quot;OK OK, mais c'était quand même pratique l'alias.&quot;</p>
+</blockquote>
+<h2>Mieux que l'alias !</h2>
+<p>Je vous propose à la place un script qui :</p>
+<ul>
+<li>s'installe en une ligne de commande</li>
+<li>s'appelle très facilement,</li>
+<li>peut mettre à jour la commande,</li>
+<li>peut être désinstallé,</li>
+<li><strong>que vous pouvez utilisez pour vos commandes</strong>.</li>
+</ul>
+<p>Vous voulez essayer chez vous?</p>
+<p><em>Le seul prérequis : avoir installé Docker sur son ordinateur. Allez faire un tour sur <a href="https://www.docker.com/get-docker">Get Docker</a> si ça n'est pas le cas. La Docker Community Edition est gratuite.</em></p>
+<p>Voici la ligne d'installation pour notre exemple :</p>
+<pre><code class="language-bash">curl -s https://raw.githubusercontent.com/tducret/amazon-scraper-python/master/amazon2csv \
+&gt; /usr/local/bin/amazon2csv &amp;&amp; chmod +x /usr/local/bin/amazon2csv
+</code></pre>
+<p>Cela télécharge le script et le place dans <code>/usr/local/bin</code> (vous pouvez modifier ce chemin par un autre, dans la mesure où il se trouve dans votre $PATH). Enfin, on rend le script exécutable avec <code>chmod +x</code>.</p>
+<p>Vous pouvez alors exécuter ces commandes dans le terminal pour vérifier le bon fonctionnement :</p>
+<pre><code class="language-bash">amazon2csv --help
+amazon2csv --keywords=&quot;Python programming&quot; --maxproductnb=2
+</code></pre>
+<p>Le script se chargera de faire le <em>docker run</em> en lui passant les paramètres demandés.</p>
+<p>Pour faire une <strong>mise à jour</strong> (le script se chargera de faire le <em>docker pull</em>):</p>
+<pre><code class="language-bash">amazon2csv --upgrade
+</code></pre>
+<p>Et pour <strong>désinstaller</strong> le tout (suppression du script et de l'image), il suffit d'appeler :</p>
+<pre><code class="language-bash">amazon2csv --uninstall
+</code></pre>
+<p>Je vous invite à regarder <a href="https://github.com/tducret/amazon-scraper-python/blob/master/amazon2csv">le code source</a> si vous êtes curieux, ou si vous souhaitez vous en servir.</p>
+<p>Pour l'utiliser pour votre commande, vous devez simplement modifier la ligne suivante (et renommer le script à votre guise) :</p>
+<pre><code class="language-bash">DOCKER_IMAGE=&quot;thibdct/amazon2csv&quot;
+</code></pre>
+<h2>Performances</h2>
+<p>Il est logique de se demander si l'utilisation d'un conteneur pour lancer une commande est performante.</p>
+<p>Comparons le temps d'exécution de la commande dans le conteneur avec celle installée normalement.</p>
+<p>On exécute la commande <code>time</code> suivie de ce que l'on souhaite mesurer.</p>
+<p><code>time docker run -it --rm amazon2csv --help</code> <em>(on teste ici la commande dans le conteneur)</em></p>
+<pre><code class="language-bash">real	0m2.265s
+user	0m0.160s
+sys	0m0.031s
+</code></pre>
+<p><code>time amazon2csv.py --help</code> <em>(ici, la commande est installée de manière classique, sans conteneur)</em></p>
+<pre><code class="language-bash">real	0m0.644s
+user	0m0.525s
+sys	0m0.083s
+</code></pre>
+<p><code>time docker run -it --rm amazon2csv --keywords=&quot;Python programming&quot; --maxproductnb=10</code></p>
+<pre><code class="language-bash">real	0m3.903s
+user	0m0.160s
+sys	0m0.027s
+</code></pre>
+<p><code>amazon2csv.py --keywords=&quot;Python programming&quot; --maxproductnb=10</code></p>
+<pre><code class="language-bash">real	0m2.241s
+user	0m0.830s
+sys	0m0.100s
+</code></pre>
+<p>Le temps d'exécution est donc plus long lorsque la commande est dans un conteneur <em>(mais personne n'est surpris)</em>.</p>
+<p>L'écart de <strong>1,6 seconde</strong> semble se maintenir entre l'exécution directe et celle via un conteneur. Cela correspond certainement au temps de démarrage du conteneur sur mon ordinateur <em>(vous aurez peut-être une meilleure performance chez vous)</em>.</p>
+<p>A vous de juger si cette perte de performance est acceptable, mais il faut bien sûr la mettre en balance avec le gain de temps sur le plan de la facilité de déploiement de la commande.</p>
+<p><img src="https://media.giphy.com/media/6AFldi5xJQYIo/giphy.gif" alt="Container management" /></p>
+
+<footer></footer>
+</html>

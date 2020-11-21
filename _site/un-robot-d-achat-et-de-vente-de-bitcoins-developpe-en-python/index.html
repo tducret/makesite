@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<link rel="icon" href="data:;base64,=">
+<meta charset="utf-8">
+<title>Un robot d'achat et de vente de Bitcoins développé en Python - tducret.com</title>
+<link rel="stylesheet" href="/style.css">
+
+<header>
+    <h1>[td]</h1>
+    <nav><a href="/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
+</header>
+
+<h1>Un robot d'achat et de vente de Bitcoins développé en Python</h1>
+<p>Qu'il s'agisse d'adolescents qui ont fait fortune ou de personnes qui achètent de la drogue sur le <em>&quot;dark web&quot;</em>, les cryptomonnaies font parler d'elles en ce moment.
+Dans cet article, je vous présente mon <strong>robot de trading en Python</strong>. Il achètera à votre place des cryptomonnaies quand elles baissent, et les revendra quand elles remontent. Basique !</p>
+<h1>L'origine du projet</h1>
+<p>En fait, ce projet est un effet collatéral d'un projet de récupération du solde de mes différents comptes bancaires. L'idée est de créer une alternative open source à <a href="https://www.linxo.com/">Linxo</a>, que l'on peut héberger chez soi.</p>
+<p>Vous pouvez en savoir plus en lisant l'article sur le [reverse engineering de l'application mobile ING Direct]({{ site.baseurl }}{% post_url 2018-05-24-reverse-engineering-de-l-application-mobile-ing-direct %}).</p>
+<h2>Revolut</h2>
+<p>L'idée initiale était donc de créer une bibliothèque Python pour interroger mes comptes bancaires <a href="https://www.revolut.com/">Revolut</a>.
+Comme pour <em>ING Direct</em>, j'ai décidé d'analyser les échanges entre l'application mobile de la banque et leurs serveurs.</p>
+<p>Cela m'a permis de créer <a href="https://pypi.org/project/revolut">le package Python <strong>revolut</strong></a>.</p>
+<p>Après installation, un appel à la commande <code>revolut_cli.py</code> vous permettra de récupérer le solde de vos comptes Revolut dans le terminal.</p>
+<p>Cela ressemblera à ça :</p>
+<pre><code class="language-csv">Nom du compte;Solde;Devise
+EUR CURRENT;100,50;EUR
+GBP CURRENT;20,00;GBP
+USD CURRENT;0,00;USD
+AUD CURRENT;0,00;AUD
+BTC CURRENT;0,00123456;BTC
+EUR SAVINGS (Mon coffre);10,30;EUR
+</code></pre>
+<p>Le code source et tous les détails du projet sont sur <a href="https://github.com/tducret/revolut-python">le projet Github revolut-python</a>.</p>
+<h1>Et ensuite...</h1>
+<p>L'histoire pourrait s'arrêter là, mais en décembre 2017, Revolut a annoncé <a href="https://blog.revolut.com/revolut-launches-easiest-fastest-way-to-buy-cryptocurrencies/">le lancement du moyen le plus simple et le plus rapide d'acheter des cryptomonnaies</a>.</p>
+<p>Et effectivement, c'est très simple !</p>
+<p>Sur l'application mobile, on peut créer un porte-monnaie virtuel pour chaque devise : euros, dollars, livres sterling... et désormais bitcoins, ethereum, litecoin et j'en passe.</p>
+<p><img src="/assets/article_images/2018-08-17-un-robot-d-achat-et-de-vente-de-bitcoins-developpe-en-python/echange_gbp_btc.png" alt="Echange de livres sterling en bitcoins sur l'application Revolut" /></p>
+<p>Il suffit alors d'alimenter un des porte-monnaie (par exemple en le rechargeant par carte bancaire en euros), et l'on peut faire des échanges vers le porte-monnaie de son choix.</p>
+<p><strong>24h/24, 7j/7, avec le cours du moment.</strong></p>
+<p>Il est facile de faire ces conversions à la main avec l'application, mais si vous souhaitez acheter ou revendre au meilleur prix, il faut :</p>
+<ol>
+<li>suivre le cours des devises (très) régulièrement</li>
+<li>détecter le bon moment pour acheter</li>
+<li>sortir son smartphone</li>
+<li>lancer l'application Revolut</li>
+<li>taper son mot de passe</li>
+<li>convertir le montant souhaité dans l'autre devise</li>
+</ol>
+<p>Bon, j'exagère un peu 🤥, mais il est clair que l'on préfère profiter de la plage que de suivre le cours €/Bitcoins.</p>
+<p><strong>Si seulement on pouvait automatiser cette tâche fastidieuse...</strong></p>
+<p>L'idée du robot était née.</p>
+<h1>Principes du robot</h1>
+<p>N'ayant pas de formation dans la finance, mon robot est très simple.</p>
+<ul>
+<li>Point de départ (la référence) : j'échange 100€ en bitcoins.</li>
+<li>Désormais, le robot va vérifier régulièrement si la revente de ces 0.0176 bitcoins rapporte au moins 1% d'intérêts par rapport à la référence (donc 101€ dans notre cas). Quand cela se produit, le robot fait la conversion des bitcoins en euros automatiquement.</li>
+<li>À partir de là, le robot va vérifier si la revente de ces 101€ rapporte plus que 0.01777 bitcoins (0.0176 +1% de marge), et fera la conversion des euros en bitcoins si cela se produit.</li>
+</ul>
+<p>Et ainsi de suite...</p>
+<p><img src="/assets/article_images/2018-08-17-un-robot-d-achat-et-de-vente-de-bitcoins-developpe-en-python/bot_principle.png" alt="Principe de fonctionnement du robot revolutbot" /></p>
+<h1>Implémentation</h1>
+<p>Pour implémenter ce robot, j'ai complété le package Python <strong>revolut</strong> avec <strong>les fonctions de conversion et d'échange de devises</strong>. Il a fallu faire ces manipulations sur l'application mobile, et analyser de nouveau les échanges avec les serveurs de Revolut pour comprendre leur API.</p>
+<p>Une fois ces fonctions en place, j'ai développé le robot <code>revolutbot.py</code>, qui respecte les principes présentés plus haut. Il écrit par ailleurs dans un fichier csv l'ensemble des transactions effectuées.</p>
+<p>Ce robot est activable par ligne de commande. On peut donc l'ajouter dans une <a href="https://fr.wikipedia.org/wiki/Cron#crontab">table cron</a> pour qu'il scrute régulièrement le cours euros/bitcoins sans que vous n'ayez à y penser.</p>
+<p>Chez moi, le robot se lance toutes les minutes sur un Raspberry Pi.</p>
+<p><strong>Nota :</strong> <em>l'exemple illustré ici parle de conversion d'euros en bitcoins, mais le robot fonctionne avec tout type de conversion reconnu sur Revolut : euros/dollars, bitcoins/ethereum, livres sterling/zloty polonais, etc.</em></p>
+<p>Les détails techniques d'installation et de configuration se trouvent sur <a href="https://github.com/tducret/revolut-python">la page du projet revolut-python</a>.</p>
+<p><img src="https://media.giphy.com/media/WgRseQE7lvP6VCr4af/giphy-downsized.gif" alt="Hypnotical bitcoins" /></p>
+
+<footer></footer>
+</html>
