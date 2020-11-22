@@ -12,24 +12,6 @@ Bref, ce sont deux bonnes raisons pour **créer une skill Alexa vous-même** !
 
 ---
 
-#### 📖 Table des matières
-
-[Étape 1 - Trouver une idée](#Étape-1---trouver-une-idée)
-
-[Étape 2 - Définir l'interaction](#Étape-2---définir-linteraction)
-
-[Étape 3 - Configurer l'interaction](#Étape-3---configurer-linteraction)
-
-[Étape 4 - Coder la fonction](#Étape-4---coder-la-fonction)
-
-[Étape 5 - Charger la fonction sur Lambda](#Étape-5---charger-la-fonction-sur-lambda)
-
-[Étape 6 - Tester](#Étape-6---tester)
-
-[Étape 7 - Publier votre skill sur Amazon store](#Étape-7---publier-votre-skill-sur-amazon-store)
-
----
-
 # Étape 1 - Trouver une idée
 
 Toutes les idées ne sont pas forcément adaptées pour un assistant vocal.
@@ -39,8 +21,6 @@ D'après Amazon, votre projet est **intéressant pour Alexa** si c'est un servic
 - Rapide
 - Facile
 - Fun
-
-![Boutique de skills Alexa en France](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/store_france.png)
 
 Pour vous inspirer, vous pouvez aller jeter un oeil sur le store [français](https://www.amazon.fr/alexa-skills/b/ref=sd_allcat_k_a2s_all?ie=UTF8&node=13944548031), [anglais](https://www.amazon.co.uk/alexa-skills/b/ref=nav_shopall_k_a2s_all?ie=UTF8&node=10068517031) ou [américain](https://www.amazon.com/alexa-skills/b/ref=sd_allcat_ods_ha_con_skills_st?ie=UTF8&node=13727921011).
 
@@ -84,11 +64,9 @@ Cliquez sur le bouton **Create Skill**, entrez le nom souhaité, la langue, et l
 
 Cliquez alors de nouveau sur le bouton **Create Skill**.
 
-![Fenêtre de création de la skill Alexa](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/creation_skill.png)
-
 Vous arrivez à la fenêtre de configuration de skill suivante :
 
-![Console de développement de votre skill](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/accueil_console_creation_skill.png)
+![Console de développement de votre skill](../images/20181008/consoleskill.png)
 
 ### Définition de l'invocation
 
@@ -96,7 +74,7 @@ Pour commencer, nous allons choisir le ou les mots que l'utilisateur devra prono
 
 Cliquez sur **Invocation** dans le menu de gauche, saisissez votre choix (ici : *bus toulouse*), et cliquez sur **Save Model** pour sauvegarder.
 
-![Choix de l'invocation de la skill](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/invocation_skill.png)
+![Choix de l'invocation de la skill](../images/20181008/invocation.png)
 
 Cela va permettre d'appeler votre skill en disant par exemple :
 
@@ -112,8 +90,6 @@ A partir de maintenant, nous allons définir le format des requêtes orales de l
 
 Dans le menu de gauche, à côté de *Intents*, cliquez sur **Add**. Donnez-lui un nom (par exemple : `demande_prochains_passages_a_un_arret`) et cliquez sur **Create custom intent**.
 
-![Ajout d'un intent](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/ajout_intent.png)
-
 Dans *Sample Utterances*, vous pouvez désormais entrer les phrases possibles. *Utterance* signifie en français *énoncé* ou *déclaration*.
 
 Pour notre exemple, nous pouvons reprendre les questions définies plus haut... **à un détail près.**
@@ -126,7 +102,7 @@ On entre donc : *Quel est le prochain bus à l'arrêt `{arret_bus}`*
 
 > Nota : Amazon ne veut pas du point d'interrogation dans nos questions
 
-![Ajout d'une utterance avec un slot](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/ajout_utterance.png)
+![Ajout d'une utterance avec un slot](../images/20181008/utterance.png)
 
 La console de développement détecte que le slot `{arret_bus}` n'existe pas encore. On clique sur **Add**.
 
@@ -135,15 +111,13 @@ On entre alors les deux autres phrases :
 - Quand passe le prochain bus à l'arrêt `{arret_bus}`
 - Prochain bus à l'arrêt `{arret_bus}`
 
-![A la fin de la saisie des utterances](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/fin_ajout_utterances.png)
+![A la fin de la saisie des utterances](../images/20181008/utterance2.png)
 
 ### Définition du type de slot
 
 On voit dans la capture précédente que le slot `{arret_bus}` n'a pas de *Slot type* associé.
 
 On peut regarder les types disponibles en français. *Et oui, ils sont spécifiques à chaque langue. Il y aura donc probablement plus de types de slots en anglais.*
-
-![Types de slots](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/slot_types.png)
 
 > Vous trouverez plus d'infos sur les types standards d'Amazon sur la page [Slot type reference](https://developer.amazon.com/fr/docs/custom-skills/slot-type-reference.html)
 
@@ -157,7 +131,7 @@ Vous pouvez alors ajouter les valeurs possibles une à une.
 
 > Il est également possible d'ajouter une longue liste ou un fichier csv, en cliquant sur le bouton **Bulk Edit**.
 
-![Définition des valeurs du type de slot](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/definition_slot_type.png)
+![Définition des valeurs du type de slot](../images/20181008/slottype.png)
 
 Sauvegardez ce type en cliquant sur le bouton du haut **Save Model**.
 
@@ -231,7 +205,6 @@ aucun passage prévu à l'arrêt {}.".format(arret_bus_demande)
 
 Si vous voulez voir le code complet, allez sur la page du projet [bus toulouse](https://github.com/tducret/alexa-skill-bus-toulouse) ou directement sur le code [bus_toulouse.py](https://github.com/tducret/alexa-skill-bus-toulouse/blob/master/bus_toulouse.py).
 
-![Cookiecutter](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/cookiecutter.png)
 Si vous connaissez [Cookiecutter](https://github.com/audreyr/cookiecutter), j'ai créé un template [Alexa skill en Python](https://github.com/tducret/cookiecutter-alexa-skill-python) pour créer un nouveau projet rapidement.
 
 # Étape 5 - Charger la fonction sur Lambda
@@ -239,8 +212,6 @@ Si vous connaissez [Cookiecutter](https://github.com/audreyr/cookiecutter), j'ai
 Lambda permet d'héberger des fonctions dans le cloud d'Amazon. Pas besoin d'allouer de serveur, de configurer des OS, de faire du load balancing, etc. Vous vous contentez de charger votre fonction (ici notre application Alexa) et Lambda vous fournit une url unique pour l'appeler.
 
 Mieux, comme Lambda et Alexa sont développés par Amazon, leur intégration est facilitée.
-
-![Amazon Lambda](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/lambda.png)
 
 ### Création de la fonction Lambda
 
@@ -264,19 +235,17 @@ Patientez quelques instants pendant la création de la fonction.
 
 Une fois sur la page de la fonction, cliquez sur **Alexa Skills Kit** dans le menu de gauche **Ajouter des déclencheurs**.
 
-![Configuration Lambda](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/configuration_lambda.png)
+![Configuration Lambda](../images/20181008/lambda.png)
 
 Vous devrez alors ajouter l'identifiant de votre skill et cliquer sur **Ajouter**.
 
 Cet identifiant peut être récupéré dans le menu **Endpoint** de la console de développement Alexa (pas Lambda).
 
-![Sélection du menu Endpoint sur la console de développement Alexa](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/selection_endpoint.png)
-
 C'est le champ **Your Skill ID** dans *AWS Lambda ARN*.
 
 Vous devriez avoir quelque-chose qui ressemble à ça.
 
-![Configuration du déclencheur sur Lambda](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/configuration_declencheur_Lambda.png)
+![Configuration du déclencheur sur Lambda](../images/20181008/declencheur.png)
 
 En retour, vous pouvez configurer l'identifiant de le fonction Lambda dans la console de développement Alexa.
 
@@ -284,7 +253,7 @@ L'identifiant de la fonction peut être obtenu en haut à droite de la console L
 
 Votre console de développement Alexa devrait alors ressembler à ça :
 
-![Configuration du endpoint sur la console de développement Alexa](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/configuration_endpoint.png)
+![Configuration du endpoint sur la console de développement Alexa](../images/20181008/confendpoint.png)
 
 N'oubliez pas de cliquer sur le bouton **Save Endpoints**.
 
@@ -306,7 +275,7 @@ Une fois chargée, vous pouvez cliquer sur **Enregistrer** en haut à droite pou
 
 Pour tester une skill, cliquez sur le bouton **Test** dans la barre du haut de la console de développement Alexa.
 
-![Test sur la console de développement Alexa](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/test_console_alexa.png)
+![Test sur la console de développement Alexa](../images/20181008/console.png)
 
 Vous pouvez alors interagir avec votre skill à l'écrit ou avec votre micro.
 
@@ -324,7 +293,7 @@ Vous devrez alors définir les caractéristiques de votre skill et ajouter une i
 
 > Astuce : pour créer facilement et rapidement une icône de skill Alexa (ronde, avec les 2 tailles demandées). Amazon a créé [Icon Builder](https://developer.amazon.com/fr/docs/tools/icon-builder.html)
 
-![Publication de la skill sur Amazon](/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/publication_skill.png)
+![Publication de la skill sur Amazon](../images/20181008/publication.png)
 
 [Cette page](https://developer.amazon.com/fr/docs/custom-skills/certification-requirements-for-custom-skills.html) rappelle les contraintes à respecter pour publier votre skill.
 
@@ -335,9 +304,3 @@ Voilà, il ne reste plus qu'à patienter quelques heures pour que les équipes d
 Vous la verrez alors apparaitre sur le store un peu plus tard.
 
 N'hésitez pas à tester [Bus Toulouse](https://www.amazon.fr/gp/product/B07HFC8NHF) et laissez un avis [⭐⭐⭐⭐⭐](https://www.amazon.fr/review/create-review/ref=cm_cr_dp_d_wr_but_btm?ie=UTF8&channel=glance-detail&asin=B07HFC8NHF)
-
----
-
-Retour à la [📖 table des matières](#-table-des-matières)
-
-Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail [en vous inscrivant à la newsletter](http://bit.ly/newsletter-tducret)
