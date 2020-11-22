@@ -27,13 +27,13 @@
 """Make static website/blog with Python."""
 
 
-import os
-import shutil
-import re
-import glob
-import sys
-import json
 import datetime
+import glob
+import json
+import os
+import re
+import shutil
+import sys
 
 from commonmark import commonmark
 
