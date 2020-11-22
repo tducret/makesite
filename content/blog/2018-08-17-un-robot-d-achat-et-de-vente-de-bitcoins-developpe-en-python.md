@@ -39,7 +39,7 @@ Et effectivement, c'est très simple !
 
 Sur l'application mobile, on peut créer un porte-monnaie virtuel pour chaque devise : euros, dollars, livres sterling... et désormais bitcoins, ethereum, litecoin et j'en passe.
 
-![Echange de livres sterling en bitcoins sur l'application Revolut](/assets/article_images/2018-08-17-un-robot-d-achat-et-de-vente-de-bitcoins-developpe-en-python/echange_gbp_btc.png)
+![Echange de livres sterling en bitcoins sur l'application Revolut](../images/20180817/revolut.png)
 
 Il suffit alors d'alimenter un des porte-monnaie (par exemple en le rechargeant par carte bancaire en euros), et l'on peut faire des échanges vers le porte-monnaie de son choix.
 
@@ -70,7 +70,7 @@ N'ayant pas de formation dans la finance, mon robot est très simple.
 
 Et ainsi de suite...
 
-![Principe de fonctionnement du robot revolutbot](/assets/article_images/2018-08-17-un-robot-d-achat-et-de-vente-de-bitcoins-developpe-en-python/bot_principle.png)
+![Principe de fonctionnement du robot revolutbot](../images/20180817/bot.png)
 
 # Implémentation
 
@@ -85,5 +85,3 @@ Chez moi, le robot se lance toutes les minutes sur un Raspberry Pi.
 **Nota :** *l'exemple illustré ici parle de conversion d'euros en bitcoins, mais le robot fonctionne avec tout type de conversion reconnu sur Revolut : euros/dollars, bitcoins/ethereum, livres sterling/zloty polonais, etc.*
 
 Les détails techniques d'installation et de configuration se trouvent sur [la page du projet revolut-python](https://github.com/tducret/revolut-python).
-
-![Hypnotical bitcoins](https://media.giphy.com/media/WgRseQE7lvP6VCr4af/giphy-downsized.gif)
