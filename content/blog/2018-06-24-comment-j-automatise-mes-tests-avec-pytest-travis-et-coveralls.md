@@ -62,8 +62,6 @@ Voici mon **TOP 3** :
 
 Lors de mes recherches, **pytest** a retenu mon attention par sa syntaxe simple et sa compatibilité avec de nombreux outils externes (cf. Travis, que je vous présente un peu plus bas).
 
-![Python Testing with pytest](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/livre_pytest.jpg)
-
 Un très bon livre lui est d'ailleurs dédié : [Python Testing with pytest](http://pythontesting.net/books/pytest/).
 
  **nose** est vraiment comparable, et il revient à chacun de se faire sa propre idée. 
@@ -120,7 +118,7 @@ pip install -U pytest
 On se place ensuite dans le répertoire du projet, et on lance la commande `pytest -v` (*v* est l'option *verbose* pour avoir plus de détails).
 
 
-![Résultat de la commande pytest](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_test_amazonscraper_get_products_with_keywords.png)
+![Résultat de la commande pytest](../images/20180624/pytest.png)
 
 ## Mock
 
@@ -212,21 +210,17 @@ def addition(a, b):
 
 *(les `...` entre **Traceback** et **TypeError** permettent de ne pas recopier intégralement l'erreur.)*
 
-![Résultat de la commande pytest avec doctest : OK](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_doctest_addition_OK.png)
-
 Pour vous montrer ce qui se passerait en cas d'échec d'un test (suite à une régression par exemple), je modifie la valeur attendue pour 2+3, en mettant 6.
 
 Voici le retour, qui indique clairement l'endroit où le test échoue.
 
-![Résultat de la commande pytest avec doctest : NOK](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_doctest_addition_NOK.png)
+![Résultat de la commande pytest avec doctest : NOK](../images/20180624/doctest.png)
 
 ## Travis
 
 Nous avons désormais de bonnes bases pour que le code soit plus facile à maintenir. Il suffit d'exécuter régulièrement la commande **pytest** pour s'assurer que tout fonctionne correctement...
 
 Et si on pouvait également automatiser cette étape 🤔
-
-![Travis CI](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/travis.png)
 
 C'est ici qu'entre en jeu [Travis CI](https://travis-ci.org/).
 
@@ -256,15 +250,11 @@ Rendez-vous ensuite sur [le site de Travis-CI](https://travis-ci.org/) pour vous
 
 Vous pourrez alors choisir les repository des projets Github à tester.
 
-![Sélection des projets à tester sur Travis](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/travis_selection_repository.png)
+![Sélection des projets à tester sur Travis](../images/20180624/travis.png)
 
 Il suffit alors de faire un commit pour déclencher les tests sur Travis.
 
-![Visualisation du déroulement des tests sur travis-ci.org](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/build_travis.png)
-
-Et si jamais cela ne se passait pas comme prévu, vous recevez un petit mail :
-
-![Exemple de mail envoyé par Travis quand une modification de code provoque une erreur](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/mail_travis_build_broken.png)
+![Visualisation du déroulement des tests sur travis-ci.org](../images/20180624/build.png)
 
 Ce n'est qu'un aperçu, les possibilités sont très nombreuses :
 
@@ -307,8 +297,6 @@ TOTAL                  353     20    94%
 
 Pas mal du tout, mais on peut faire mieux !
 
-![Coveralls.io](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/coveralls.png)
-
 Un service existe sur le web pour faciliter cette analyse : [Coveralls](http://coveralls.io/)
 
 C'est également gratuit pour les projets open source, et on peut s'inscrire avec son compte Github.
@@ -346,15 +334,11 @@ addopts = --doctest-modules --cov amazonscraper
 
 Après chaque commit sur Github, Travis va installer le code, exécuter tous mes tests, et envoyer la couverture de code à Coveralls. Je peux alors connaitre mon taux de couverture sur Coveralls, et analyser les lignes non couvertes :
 
-![Lignes non couvertes sur Coveralls](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/coveralls_lignes_non_couvertes.png)
+![Lignes non couvertes sur Coveralls](../images/20180624/coveralls.png)
 
 Dans mon cas, il s'agit d'un cas bien particulier : la gestion d'une exception en cas d'échec de communication SSL avec les serveurs d'Amazon. C'est donc difficile à tester de manière automatique (car ça n'est pas systématique).
 On peut néanmoins simuler ce comportement pour les tests à l'aide de [**Mock**](#mock).
 
-![Badges sur Github](/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/badges_github.png)
+![Badges sur Github](../images/20180624/badges.png)
 
 **BONUS** : Vous pouvez alors afficher fièrement l'état des tests et la couverture de votre code, sur la page Github de votre projet. Les badges seront mis à jour dynamiquement à chaque modification de votre programme.
-
-![Test successful](https://media.giphy.com/media/vq4q4LqJv3Qcg/giphy.gif)
-
-Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail [en vous inscrivant à la newsletter](http://bit.ly/newsletter-tducret)
