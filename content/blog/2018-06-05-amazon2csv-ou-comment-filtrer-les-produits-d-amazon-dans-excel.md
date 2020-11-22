@@ -3,8 +3,6 @@
 Il vous est certainement arrivé de vouloir vous former dans un nouveau domaine. Pour cela, vous chercher les meilleurs livres sur le sujet.
 Très vite, vous êtes submergés par des dizaines (voire centaines) de livres, sans trop savoir lesquels sélectionner.
 
-![Recherche sur Amazon](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/recherche_bash_programming.png)
-
 Pour faciliter ma sélection, je vais sur Amazon, je tape mes mots-clés, et je regarde les livres les mieux notés.
 C'est là que ça commence à devenir compliqué...
 Amazon propose plusieurs possibilités de tris (pertinence, prix, note moyenne, dernière nouveauté).
@@ -12,7 +10,7 @@ Parfait, on peut classer par note moyenne...
 
 Pas tout à fait.
 
-![Tri sensé être par note](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_bizarre.png)
+![Tri sensé être par note](../images/20180605/tri.png)
 
 D'une part, le tri semble parfois un peu bizarre.
 D'autre part, un livre avec un seul avis à 5 étoiles se retrouvera plus haut qu'un autre avec 50 et une moyenne de 4.7.
@@ -28,13 +26,11 @@ Et là, surprise... Un projet sur Github attire rapidement mon attention.
 
 ## Bottlenose
 
-![Bottlenose](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/bottlenose.png)
-
->>> Bottlenose is a thin, well-tested, maintained, and powerful Python wrapper over the Amazon Product Advertising API. There is practically no overhead, and no magic (unless you add it yourself).
+> Bottlenose is a thin, well-tested, maintained, and powerful Python wrapper over the Amazon Product Advertising API. There is practically no overhead, and no magic (unless you add it yourself).
 
 Il faut noter un détail important dans la description :
 
->>> Before you get started, make sure you have both Amazon Product Advertising and AWS accounts. AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_ASSOCIATE_TAG are all from your Amazon Associate Account.
+> Before you get started, make sure you have both Amazon Product Advertising and AWS accounts. AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_ASSOCIATE_TAG are all from your Amazon Associate Account.
 
 En clair, ce package Python utilise l'API officielle d'Amazon, dédiée aux affiliés.
 
@@ -49,7 +45,7 @@ Je m'inscris avec l'adresse du blog : https://www.tducret.com.
 
 Malheureusement, mes essais s'arrêtent brutalement ce matin-là...
 
->>> "L'enregistrement pour l'API de publicité de produit (Product Advertising) est disponible uniquement pour les partenaires qui ont été examinés et qui ont été acceptés de manière définitive dans le programme Partenaires.
+> "L'enregistrement pour l'API de publicité de produit (Product Advertising) est disponible uniquement pour les partenaires qui ont été examinés et qui ont été acceptés de manière définitive dans le programme Partenaires.
 
 OK, il va falloir patienter.
 
@@ -57,11 +53,11 @@ OK, il va falloir patienter.
 
 Quelques heures plus tard, je reçois cet email :
 
-![Email de refus d'Amazon](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/refus_amazon.png)
+![Email de refus d'Amazon](../images/20180605/refus.png)
 
 Ouch...
 
-# A l'ancienne
+# À l'ancienne
 
 Je décide donc de changer d'approche. Tant pis (ou tant mieux), je vais développer mon outil.
 Pour cela, je fais une recherche sur Amazon dans mon navigateur, et je regarde le code source de la page de résultats.
@@ -134,16 +130,16 @@ Le résultat est renvoyé dans le terminal, mais il peut très facilement être 
 amazon2csv -u "https://www.amazon.fr/s/ref=nb_sb_noss?__mk_fr_FR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=search-alias%3Daps&field-keywords=bash+programming" --separator=";" > bash_programming.csv
 ```
 
-![Affichage de bash_programming.csv sous Excel](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_excel_nb_commentaires_bash_programming.png)
+![Affichage de bash_programming.csv sous Excel](../images/20180605/tri2.png)
 
 On peut alors s'amuser à faire un tri "sur-mesure". Je décide d'ajouter une colonne avec **ma note**.
 Je me contente d'une formule basée sur la note (B2) et le nombre de commentaires (C2).
 
-![La formule Excel de ma note](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/formule_excel_ma_note.png)
+![La formule Excel de ma note](../images/20180605/formule.png)
 
 On obtient un tri qui est plus réaliste. Les livres notés 5 mais avec très peu de commentaires se retrouvent bien plus bas.
 
-![Tri Excel avec ma note](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_excel_ma_note_bash_programming.png)
+![Tri Excel avec ma note](../images/20180605/tri3.png)
 
 
 ## Ça n'est pas que pour les livres...
@@ -156,8 +152,6 @@ Démo rapide : les 100 thrillers les plus populaires :
 amazon2csv -u "https://www.amazon.fr/s/ref=sr_nr_p_n_feature_sixteen__11?fst=as%3Aoff&rh=n%3A405322%2Cp_n_binding_browse-bin%3A383376011%2Cp_n_feature_sixteen_browse-bin%3A5704749031&bbn=405322&ie=UTF8&qid=1528089053&rnid=5704717031" -m 100 --separator=";" > thriller.csv
 ```
 
-![Top 100 thrillers](/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/top_100_thrillers.png)
-
-![Thriller](https://media.giphy.com/media/ofEEPYCz2ZOog/giphy.gif)
+![Top 100 thrillers](../images/20180605/top100.png)
 
 N'hésitez pas à ajouter une étoile au projet Github si cela vous a plu ([★ → amazon-scraper-python](https://github.com/tducret/amazon-scraper-python))
