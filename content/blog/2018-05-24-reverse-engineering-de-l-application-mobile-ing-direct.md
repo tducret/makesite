@@ -33,8 +33,6 @@ Cependant, certaines de ces API ne sont pas documentées. C'est le cas ici pour 
 
 # Charles : l'outil ultime pour savoir ce que raconte votre mobile
 
-![Charles Proxy](/assets/article_images/2018-05-24-reverse-engineering-de-l-application-mobile-ing-direct/charles-macosx.png)
-
 Pour connaitre l'API de consultation des comptes d'ING Direct, je dois visualiser les échanges entre mon smartphone et les serveurs d'ING. Il existe un outil parfait pour cette tâche : [Charles](https://www.charlesproxy.com/). Il est disponible sur Windows/Mac/Linux, avec une version d'essai gratuite parfaitement fonctionnelle.
 
 Charles permet de créer un proxy sur votre PC, sur lequel votre smartphone va se connecter pour accéder à internet. Ainsi, tout ce qu'il échangera avec le web sera visualisable sur le PC.
@@ -52,7 +50,7 @@ Voici les étapes déroulées pour découvrir l'API non officielle d'ING Direct 
 
 Voici le diagramme de séquences qui illustre la succession des échanges entre mon mobile et les serveurs ING Direct lors de la consultation de mes comptes.
 
-![Diagramme de séquences mobile/ING](/assets/article_images/2018-05-24-reverse-engineering-de-l-application-mobile-ing-direct/diagramme_sequences_ING.png)
+![Diagramme de séquences mobile/ING](../images/20180524/diag.png)
 
 # Création d'un package Python et d'une commande
 
@@ -83,9 +81,6 @@ Nom du compte;Solde
 Compte Courant XXXX 1234;1500,5€
 Livret A XXXX 3456;10000,0€
 ```
-
-
-![Well done](https://media.giphy.com/media/Mp4hQy51LjY6A/giphy.gif)
 
 **MISSION ACCOMPLIE!**
 
