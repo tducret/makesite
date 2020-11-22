@@ -19,11 +19,11 @@ Vous ne pourrez pas obtenir l'ensemble des billets disponibles sur une période 
 
 Au mieux, vous aurez un [calendrier de prix](https://www.oui.sncf/calendar), avec le meilleur prix pour chaque jour du mois.
 
-![Calendrier des prix Toulouse → Paris en septembre 2018 sur Oui.sncf](/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/calendrier_prix.png)
+![Calendrier des prix Toulouse → Paris en septembre 2018 sur Oui.sncf](../images/20180905/calendrier.png)
 
 Malheureusement, ce calendrier n'est disponible que pour les trajets les plus courants. Si vous sortez des cas prévus, gare à l'erreur :
 
-![Message renvoyé quand on essaie d'obtenir le calendrier des prix pour Toulouse -> Cannes](/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/erreur_calendrier_prix.png)
+![Message renvoyé quand on essaie d'obtenir le calendrier des prix pour Toulouse -> Cannes](../images/20180905/erreur.png)
 
 De même, il n'est pas possible d'obtenir le calendrier des prix en prenant en compte une carte de réduction Enfant+, ou de réserver un emplacement vélo 😞
 
@@ -140,13 +140,11 @@ Il suffit alors de récupérer ces résultats et les ouvrir sur un tableur pour 
 
 > Nota : J'ai ajouté la colonne **prix_total**, correspondant au prix des billets de train + le prix de la réservation des emplacements vélos. Soit : price + bicycle_reservation
 
-![Tri des résultats par prix total sous Excel](/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/resultats_tries_sous_excel.png)
+![Tri des résultats par prix total sous Excel](../images/20180905/excel.png)
 
 **Bilan** : deux dates intéressantes, le 23 et 24 octobre, avec un prix total de 35€ pour nous 3 et nos vélos ! (le prix maximum étant de 301,50€...)
 
 Une fois le billet repéré, rendez-vous sur [Trainline](https://www.trainline.eu/) pour le réserver.
-
-![Le billet de train sur Trainline](/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/resultat_trainline.png)
 
 # Une commande dans le terminal
 
@@ -172,12 +170,4 @@ trainline_cli.py -d Toulouse -a Bordeaux -n 2h
 
 Vous obtiendrez les résultats au format csv.
 
-![Utilisation de l'outil en ligne de commande](/assets/article_images/2018-09-05-trouvez-le-billet-de-train-le-moins-cher-grace-a-ce-module-python/utilisation_CLI_trainline.svg)
-
-![Locomotive](https://media.giphy.com/media/NGSbD5vI6lUvC/giphy-downsized.gif)
-
 Rendez-vous sur [la page Github du projet Trainline](https://github.com/tducret/trainline-python) pour plus de détails sur le module Python et l'outil (installation, exemples d'utilisation).
-
---------
-
-Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail [en vous inscrivant à la newsletter](http://bit.ly/newsletter-tducret)
