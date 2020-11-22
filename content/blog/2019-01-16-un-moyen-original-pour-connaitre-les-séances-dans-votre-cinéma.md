@@ -23,7 +23,7 @@ Pour cela, rendez-vous sur sa page allociné, et récupérez l'identifiant dans 
 
 Par exemple pour le Gaumont Labège : P0645. 
 
-![Récupération de l'identifiant du cinéma sur Allociné](/assets/article_images/2019-01-16-un-moyen-original-pour-connaitre-les-séances-dans-votre-cinéma/snapshot_theater_id.png)
+![Récupération de l'identifiant du cinéma sur Allociné](../images/20190116/theaterid.png)
 
 Ensuite, retour dans le terminal : `seances.py --help` vous donnera les options possibles (ou `docker run -it --rm thibdct/seances seances --help` si vous utilisez l'image Docker).
 
@@ -35,7 +35,7 @@ Quelques exemples, pour le cinéma Gaumont Labège :
 - les séances pour les 7 prochains jours : `seances.py P0645 --semaine`
 - les séances du jour avec des entrelignes entre chaque film (pour la lisibilité) : `seances.py P0645 --entrelignes`
 
-![Exemple d'affichage du programme des séances](/assets/article_images/2019-01-16-un-moyen-original-pour-connaitre-les-séances-dans-votre-cinéma/couverture.png)
+![Exemple d'affichage du programme des séances](../images/20190116/seances.png)
 
 Vous pouvez donc voir de manière très synthétique l'ensemble des séances de votre cinéma. Le tout dans un joli tableau, avec une colonne par heure (plus facile pour comparer les films d'une même tranche horaire). 
 
@@ -43,12 +43,8 @@ Vous pouvez donc voir de manière très synthétique l'ensemble des séances de 
 
 Enfin, quand il y a beaucoup de séances, n'hésitez pas à utiliser l'option `--entrelignes`.
 
-![Avec les entrelignes](/assets/article_images/2019-01-16-un-moyen-original-pour-connaitre-les-séances-dans-votre-cinéma/seances_avec_entrelignes.png)
+![Avec les entrelignes](../images/20190116/seances2.png)
 
 ---
 
 N'hésitez pas à aller faire un tour sur [la page du projet allocine-python](https://github.com/tducret/allocine-python#installation).
-
-![Bonne séance !](https://media.giphy.com/media/pcLw0jLBelkbK/giphy.gif)
-
-📨 **Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail [en vous inscrivant à la newsletter](http://bit.ly/newsletter-tducret)**
