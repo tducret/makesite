@@ -2,15 +2,91 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>Reverse engineering de l'application mobile ING Direct - tducret.com</title>
-<link rel="stylesheet" href="/makesite/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="/makesite/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>Reverse engineering de l'application mobile ING Direct</h1>
 <p>Depuis quelques années, je note régulièrement sur une feuille Excel le solde de chacun de mes comptes bancaires. Je ne récupère pas tout l'historique des opérations, juste le montant disponible ce jour-là. Cela me permet de suivre l'évolution de nos économies.
 Cette tâche peut prendre du temps car nous avons des comptes dans différentes banques (comptes courants, plan d'épargne entreprise, PEA...). Je le fais donc tous les 6 mois environ.</p>
@@ -39,7 +115,6 @@ Cela permettra aussi de le faire plus régulièrement.</p>
 <p>Je choisis la deuxième option car l'utilisation des interfaces de programmation (API) des applications mobiles est plus performant que l'extraction d'informations dans des pages HTML. Le volume de données échangées est en effet beaucoup plus faible que celui contenu dans une page HTML.
 Cependant, certaines de ces API ne sont pas documentées. C'est le cas ici pour ING. Il faut alors faire de la <a href="https://fr.wikipedia.org/wiki/R%C3%A9tro-ing%C3%A9nierie">rétro-ingénierie</a> (ou reverse engineering) pour découvrir leur fonctionnement. Ça tombe bien, c'est un exercice qui me passionne!</p>
 <h1>Charles : l'outil ultime pour savoir ce que raconte votre mobile</h1>
-<p><img src="/assets/article_images/2018-05-24-reverse-engineering-de-l-application-mobile-ing-direct/charles-macosx.png" alt="Charles Proxy" /></p>
 <p>Pour connaitre l'API de consultation des comptes d'ING Direct, je dois visualiser les échanges entre mon smartphone et les serveurs d'ING. Il existe un outil parfait pour cette tâche : <a href="https://www.charlesproxy.com/">Charles</a>. Il est disponible sur Windows/Mac/Linux, avec une version d'essai gratuite parfaitement fonctionnelle.</p>
 <p>Charles permet de créer un proxy sur votre PC, sur lequel votre smartphone va se connecter pour accéder à internet. Ainsi, tout ce qu'il échangera avec le web sera visualisable sur le PC.</p>
 <p>Voici les étapes déroulées pour découvrir l'API non officielle d'ING Direct :</p>
@@ -53,7 +128,7 @@ Cependant, certaines de ces API ne sont pas documentées. C'est le cas ici pour 
 </ol>
 <h2>Modélisation des échanges Mobile ⟷ ING Direct</h2>
 <p>Voici le diagramme de séquences qui illustre la succession des échanges entre mon mobile et les serveurs ING Direct lors de la consultation de mes comptes.</p>
-<p><img src="/assets/article_images/2018-05-24-reverse-engineering-de-l-application-mobile-ing-direct/diagramme_sequences_ING.png" alt="Diagramme de séquences mobile/ING" /></p>
+<p><img src="../images/20180524/diag.png" alt="Diagramme de séquences mobile/ING" /></p>
 <h1>Création d'un package Python et d'une commande</h1>
 <p>A partir de ces découvertes, je peux reproduire le comportement de l'application mobile avec du code Python. Je crée alors un package dédié (<strong>ingdirect</strong>, disponible sur <a href="https://pypi.org/project/ingdirect/">pip</a>), ainsi qu'une commande <code>ing</code> pour interroger très simplement ses comptes bancaires en ligne de commande.</p>
 <p><em>Toutes les infos sur les paramètres d'entrée et sortie et l'utilisation de la commande sont sur <a href="https://github.com/tducret/ingdirect-python">la page Github du package ingdirect-python</a>.</em></p>
@@ -75,7 +150,6 @@ Options:
 Compte Courant XXXX 1234;1500,5€
 Livret A XXXX 3456;10000,0€
 </code></pre>
-<p><img src="https://media.giphy.com/media/Mp4hQy51LjY6A/giphy.gif" alt="Well done" /></p>
 <p><strong>MISSION ACCOMPLIE!</strong></p>
 <p>N'hésitez pas à ajouter une étoile au projet Github si cela vous a plu (<a href="https://github.com/tducret/ingdirect-python">★ → ingdirect-python</a>)</p>
 

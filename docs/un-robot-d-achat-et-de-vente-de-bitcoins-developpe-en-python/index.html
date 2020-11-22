@@ -2,15 +2,91 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>Un robot d'achat et de vente de Bitcoins développé en Python - tducret.com</title>
-<link rel="stylesheet" href="/makesite/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="/makesite/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>Un robot d'achat et de vente de Bitcoins développé en Python</h1>
 <p>Qu'il s'agisse d'adolescents qui ont fait fortune ou de personnes qui achètent de la drogue sur le <em>&quot;dark web&quot;</em>, les cryptomonnaies font parler d'elles en ce moment.
 Dans cet article, je vous présente mon <strong>robot de trading en Python</strong>. Il achètera à votre place des cryptomonnaies quand elles baissent, et les revendra quand elles remontent. Basique !</p>
@@ -36,7 +112,7 @@ EUR SAVINGS (Mon coffre);10,30;EUR
 <p>L'histoire pourrait s'arrêter là, mais en décembre 2017, Revolut a annoncé <a href="https://blog.revolut.com/revolut-launches-easiest-fastest-way-to-buy-cryptocurrencies/">le lancement du moyen le plus simple et le plus rapide d'acheter des cryptomonnaies</a>.</p>
 <p>Et effectivement, c'est très simple !</p>
 <p>Sur l'application mobile, on peut créer un porte-monnaie virtuel pour chaque devise : euros, dollars, livres sterling... et désormais bitcoins, ethereum, litecoin et j'en passe.</p>
-<p><img src="/assets/article_images/2018-08-17-un-robot-d-achat-et-de-vente-de-bitcoins-developpe-en-python/echange_gbp_btc.png" alt="Echange de livres sterling en bitcoins sur l'application Revolut" /></p>
+<p><img src="../images/20180817/revolut.png" alt="Echange de livres sterling en bitcoins sur l'application Revolut" /></p>
 <p>Il suffit alors d'alimenter un des porte-monnaie (par exemple en le rechargeant par carte bancaire en euros), et l'on peut faire des échanges vers le porte-monnaie de son choix.</p>
 <p><strong>24h/24, 7j/7, avec le cours du moment.</strong></p>
 <p>Il est facile de faire ces conversions à la main avec l'application, mais si vous souhaitez acheter ou revendre au meilleur prix, il faut :</p>
@@ -59,7 +135,7 @@ EUR SAVINGS (Mon coffre);10,30;EUR
 <li>À partir de là, le robot va vérifier si la revente de ces 101€ rapporte plus que 0.01777 bitcoins (0.0176 +1% de marge), et fera la conversion des euros en bitcoins si cela se produit.</li>
 </ul>
 <p>Et ainsi de suite...</p>
-<p><img src="/assets/article_images/2018-08-17-un-robot-d-achat-et-de-vente-de-bitcoins-developpe-en-python/bot_principle.png" alt="Principe de fonctionnement du robot revolutbot" /></p>
+<p><img src="../images/20180817/bot.png" alt="Principe de fonctionnement du robot revolutbot" /></p>
 <h1>Implémentation</h1>
 <p>Pour implémenter ce robot, j'ai complété le package Python <strong>revolut</strong> avec <strong>les fonctions de conversion et d'échange de devises</strong>. Il a fallu faire ces manipulations sur l'application mobile, et analyser de nouveau les échanges avec les serveurs de Revolut pour comprendre leur API.</p>
 <p>Une fois ces fonctions en place, j'ai développé le robot <code>revolutbot.py</code>, qui respecte les principes présentés plus haut. Il écrit par ailleurs dans un fichier csv l'ensemble des transactions effectuées.</p>
@@ -67,7 +143,6 @@ EUR SAVINGS (Mon coffre);10,30;EUR
 <p>Chez moi, le robot se lance toutes les minutes sur un Raspberry Pi.</p>
 <p><strong>Nota :</strong> <em>l'exemple illustré ici parle de conversion d'euros en bitcoins, mais le robot fonctionne avec tout type de conversion reconnu sur Revolut : euros/dollars, bitcoins/ethereum, livres sterling/zloty polonais, etc.</em></p>
 <p>Les détails techniques d'installation et de configuration se trouvent sur <a href="https://github.com/tducret/revolut-python">la page du projet revolut-python</a>.</p>
-<p><img src="https://media.giphy.com/media/WgRseQE7lvP6VCr4af/giphy-downsized.gif" alt="Hypnotical bitcoins" /></p>
 
 <footer></footer>
 </html>

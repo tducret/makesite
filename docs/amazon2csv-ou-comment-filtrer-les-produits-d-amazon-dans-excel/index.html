@@ -2,25 +2,100 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>amazon2csv, ou comment filtrer les produits d'Amazon dans Excel - tducret.com</title>
-<link rel="stylesheet" href="/makesite/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="/makesite/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>amazon2csv, ou comment filtrer les produits d'Amazon dans Excel</h1>
 <p>Il vous est certainement arrivé de vouloir vous former dans un nouveau domaine. Pour cela, vous chercher les meilleurs livres sur le sujet.
 Très vite, vous êtes submergés par des dizaines (voire centaines) de livres, sans trop savoir lesquels sélectionner.</p>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/recherche_bash_programming.png" alt="Recherche sur Amazon" /></p>
 <p>Pour faciliter ma sélection, je vais sur Amazon, je tape mes mots-clés, et je regarde les livres les mieux notés.
 C'est là que ça commence à devenir compliqué...
 Amazon propose plusieurs possibilités de tris (pertinence, prix, note moyenne, dernière nouveauté).
 Parfait, on peut classer par note moyenne...</p>
 <p>Pas tout à fait.</p>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_bizarre.png" alt="Tri sensé être par note" /></p>
+<p><img src="../images/20180605/tri.png" alt="Tri sensé être par note" /></p>
 <p>D'une part, le tri semble parfois un peu bizarre.
 D'autre part, un livre avec un seul avis à 5 étoiles se retrouvera plus haut qu'un autre avec 50 et une moyenne de 4.7.
 On sent bien que cela n'a pas la même valeur.</p>
@@ -30,21 +105,12 @@ On sent bien que cela n'a pas la même valeur.</p>
 Comme on le dit souvent dans le développement logiciel, &quot;on ne va pas réinventer la roue !&quot;.
 Et là, surprise... Un projet sur Github attire rapidement mon attention.</p>
 <h2>Bottlenose</h2>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/bottlenose.png" alt="Bottlenose" /></p>
-<blockquote>
-<blockquote>
 <blockquote>
 <p>Bottlenose is a thin, well-tested, maintained, and powerful Python wrapper over the Amazon Product Advertising API. There is practically no overhead, and no magic (unless you add it yourself).</p>
 </blockquote>
-</blockquote>
-</blockquote>
 <p>Il faut noter un détail important dans la description :</p>
 <blockquote>
-<blockquote>
-<blockquote>
 <p>Before you get started, make sure you have both Amazon Product Advertising and AWS accounts. AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_ASSOCIATE_TAG are all from your Amazon Associate Account.</p>
-</blockquote>
-</blockquote>
 </blockquote>
 <p>En clair, ce package Python utilise l'API officielle d'Amazon, dédiée aux affiliés.</p>
 <p>Je regarde les services offerts par cette API dans le <a href="https://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_GettingStarted.html">Getting started</a>. Cela me plait bien :)</p>
@@ -54,18 +120,14 @@ Je m'inscris avec l'adresse du blog : https://www.tducret.com.</p>
 <p>Ça n'est pas terminé, il faut maintenant s'inscrire à l'<a href="https://docs.aws.amazon.com/AWSECommerceService/latest/DG/becomingDev.html">API Product Advertising</a></p>
 <p>Malheureusement, mes essais s'arrêtent brutalement ce matin-là...</p>
 <blockquote>
-<blockquote>
-<blockquote>
 <p>&quot;L'enregistrement pour l'API de publicité de produit (Product Advertising) est disponible uniquement pour les partenaires qui ont été examinés et qui ont été acceptés de manière définitive dans le programme Partenaires.</p>
-</blockquote>
-</blockquote>
 </blockquote>
 <p>OK, il va falloir patienter.</p>
 <h2>La douche froide</h2>
 <p>Quelques heures plus tard, je reçois cet email :</p>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/refus_amazon.png" alt="Email de refus d'Amazon" /></p>
+<p><img src="../images/20180605/refus.png" alt="Email de refus d'Amazon" /></p>
 <p>Ouch...</p>
-<h1>A l'ancienne</h1>
+<h1>À l'ancienne</h1>
 <p>Je décide donc de changer d'approche. Tant pis (ou tant mieux), je vais développer mon outil.
 Pour cela, je fais une recherche sur Amazon dans mon navigateur, et je regarde le code source de la page de résultats.
 Ce que je cherche pour cet outil : le titre du livre, sa note, le nombre de commentaires et son URL.</p>
@@ -106,19 +168,18 @@ C'est particulièrement intéressant si vous avez ajouté des filtres sur Amazon
 Le résultat est renvoyé dans le terminal, mais il peut très facilement être sauvegardé dans un fichier.</p>
 <pre><code class="language-bash">amazon2csv -u &quot;https://www.amazon.fr/s/ref=nb_sb_noss?__mk_fr_FR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;url=search-alias%3Daps&amp;field-keywords=bash+programming&quot; --separator=&quot;;&quot; &gt; bash_programming.csv
 </code></pre>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_excel_nb_commentaires_bash_programming.png" alt="Affichage de bash_programming.csv sous Excel" /></p>
+<p><img src="../images/20180605/tri2.png" alt="Affichage de bash_programming.csv sous Excel" /></p>
 <p>On peut alors s'amuser à faire un tri &quot;sur-mesure&quot;. Je décide d'ajouter une colonne avec <strong>ma note</strong>.
 Je me contente d'une formule basée sur la note (B2) et le nombre de commentaires (C2).</p>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/formule_excel_ma_note.png" alt="La formule Excel de ma note" /></p>
+<p><img src="../images/20180605/formule.png" alt="La formule Excel de ma note" /></p>
 <p>On obtient un tri qui est plus réaliste. Les livres notés 5 mais avec très peu de commentaires se retrouvent bien plus bas.</p>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/tri_excel_ma_note_bash_programming.png" alt="Tri Excel avec ma note" /></p>
+<p><img src="../images/20180605/tri3.png" alt="Tri Excel avec ma note" /></p>
 <h2>Ça n'est pas que pour les livres...</h2>
 <p>Ah oui, j'oubliais... J'utilise cet outil pour des livres, mais cela fonctionne avec tous les produits vendus sur Amazon (DVD, matériel, jouets, etc.).</p>
 <p>Démo rapide : les 100 thrillers les plus populaires :</p>
 <pre><code class="language-bash">amazon2csv -u &quot;https://www.amazon.fr/s/ref=sr_nr_p_n_feature_sixteen__11?fst=as%3Aoff&amp;rh=n%3A405322%2Cp_n_binding_browse-bin%3A383376011%2Cp_n_feature_sixteen_browse-bin%3A5704749031&amp;bbn=405322&amp;ie=UTF8&amp;qid=1528089053&amp;rnid=5704717031&quot; -m 100 --separator=&quot;;&quot; &gt; thriller.csv
 </code></pre>
-<p><img src="/assets/article_images/2018-06-05-amazon2csv-ou-comment-filtrer-les-produits-d-amazon-dans-excel/top_100_thrillers.png" alt="Top 100 thrillers" /></p>
-<p><img src="https://media.giphy.com/media/ofEEPYCz2ZOog/giphy.gif" alt="Thriller" /></p>
+<p><img src="../images/20180605/top100.png" alt="Top 100 thrillers" /></p>
 <p>N'hésitez pas à ajouter une étoile au projet Github si cela vous a plu (<a href="https://github.com/tducret/amazon-scraper-python">★ → amazon-scraper-python</a>)</p>
 
 <footer></footer>

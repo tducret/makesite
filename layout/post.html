@@ -2,15 +2,91 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>{{ title }} - tducret.com</title>
-<link rel="stylesheet" href="{{ base_path }}/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="{{ base_path }}/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>{{ title }}</h1>
 {{ content }}
 <footer></footer>

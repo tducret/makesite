@@ -2,15 +2,91 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>Comment j'automatise mes tests avec Pytest, Travis et Coveralls - tducret.com</title>
-<link rel="stylesheet" href="/makesite/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="/makesite/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>Comment j'automatise mes tests avec Pytest, Travis et Coveralls</h1>
 <p>Lorsque l'on crée un projet en Python, on peut avoir tendance à se focaliser sur le développement des fonctionnalités.</p>
 <ul>
@@ -53,7 +129,6 @@ En fin d'article, vous pourrez même vérifier le taux de couverture de vos test
 <li><a href="https://docs.pytest.org/en/latest/">pytest</a> : du même type que nose, mais avec une syntaxe différente</li>
 </ul>
 <p>Lors de mes recherches, <strong>pytest</strong> a retenu mon attention par sa syntaxe simple et sa compatibilité avec de nombreux outils externes (cf. Travis, que je vous présente un peu plus bas).</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/livre_pytest.jpg" alt="Python Testing with pytest" /></p>
 <p>Un très bon livre lui est d'ailleurs dédié : <a href="http://pythontesting.net/books/pytest/">Python Testing with pytest</a>.</p>
 <p><strong>nose</strong> est vraiment comparable, et il revient à chacun de se faire sa propre idée.</p>
 <h2>Mise en place des tests</h2>
@@ -93,7 +168,7 @@ def test_amazonscraper_get_products_with_keywords():
 <pre><code class="language-bash">pip install -U pytest
 </code></pre>
 <p>On se place ensuite dans le répertoire du projet, et on lance la commande <code>pytest -v</code> (<em>v</em> est l'option <em>verbose</em> pour avoir plus de détails).</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_test_amazonscraper_get_products_with_keywords.png" alt="Résultat de la commande pytest" /></p>
+<p><img src="../images/20180624/pytest.png" alt="Résultat de la commande pytest" /></p>
 <h2>Mock</h2>
 <p><em>(ajouté le 26/11/2018)</em></p>
 <p><a href="https://docs.python.org/dev/library/unittest.mock.html"><code>Mock</code></a> est un moyen très pratique de tester des fonctions nécessitant des appels à d'autres librairies ou API. Celui-ci <strong>imite</strong> cette fonction en la remplaçant par une fonction de votre choix.</p>
@@ -163,14 +238,12 @@ On les appelle les <strong>doctest</strong>.</p>
     return a+b
 </code></pre>
 <p><em>(les <code>...</code> entre <strong>Traceback</strong> et <strong>TypeError</strong> permettent de ne pas recopier intégralement l'erreur.)</em></p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_doctest_addition_OK.png" alt="Résultat de la commande pytest avec doctest : OK" /></p>
 <p>Pour vous montrer ce qui se passerait en cas d'échec d'un test (suite à une régression par exemple), je modifie la valeur attendue pour 2+3, en mettant 6.</p>
 <p>Voici le retour, qui indique clairement l'endroit où le test échoue.</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/pytest_doctest_addition_NOK.png" alt="Résultat de la commande pytest avec doctest : NOK" /></p>
+<p><img src="../images/20180624/doctest.png" alt="Résultat de la commande pytest avec doctest : NOK" /></p>
 <h2>Travis</h2>
 <p>Nous avons désormais de bonnes bases pour que le code soit plus facile à maintenir. Il suffit d'exécuter régulièrement la commande <strong>pytest</strong> pour s'assurer que tout fonctionne correctement...</p>
 <p>Et si on pouvait également automatiser cette étape 🤔</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/travis.png" alt="Travis CI" /></p>
 <p>C'est ici qu'entre en jeu <a href="https://travis-ci.org/">Travis CI</a>.</p>
 <p>Le principe de tester régulièrement le code n'est pas nouveau : on parle d'intégration continue.</p>
 <p>Néanmoins, <strong>Travis</strong> présente l'avantage d'être très simple d'utilisation et gratuit pour les projets open source.</p>
@@ -191,11 +264,9 @@ script:
 </code></pre>
 <p>Rendez-vous ensuite sur <a href="https://travis-ci.org/">le site de Travis-CI</a> pour vous inscrire (via les identifiants de votre compte Github).</p>
 <p>Vous pourrez alors choisir les repository des projets Github à tester.</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/travis_selection_repository.png" alt="Sélection des projets à tester sur Travis" /></p>
+<p><img src="../images/20180624/travis.png" alt="Sélection des projets à tester sur Travis" /></p>
 <p>Il suffit alors de faire un commit pour déclencher les tests sur Travis.</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/build_travis.png" alt="Visualisation du déroulement des tests sur travis-ci.org" /></p>
-<p>Et si jamais cela ne se passait pas comme prévu, vous recevez un petit mail :</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/mail_travis_build_broken.png" alt="Exemple de mail envoyé par Travis quand une modification de code provoque une erreur" /></p>
+<p><img src="../images/20180624/build.png" alt="Visualisation du déroulement des tests sur travis-ci.org" /></p>
 <p>Ce n'est qu'un aperçu, les possibilités sont très nombreuses :</p>
 <ul>
 <li>plusieurs types de serveurs de tests</li>
@@ -227,7 +298,6 @@ myproj/feature4286      94      7    92%
 TOTAL                  353     20    94%
 </code></pre>
 <p>Pas mal du tout, mais on peut faire mieux !</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/coveralls.png" alt="Coveralls.io" /></p>
 <p>Un service existe sur le web pour faciliter cette analyse : <a href="http://coveralls.io/">Coveralls</a></p>
 <p>C'est également gratuit pour les projets open source, et on peut s'inscrire avec son compte Github.</p>
 <p>En connectant Coveralls à Travis, on peut générer l'analyse de couverture de code automatiquement.</p>
@@ -255,13 +325,11 @@ after_success:
 addopts = --doctest-modules --cov amazonscraper
 </code></pre>
 <p>Après chaque commit sur Github, Travis va installer le code, exécuter tous mes tests, et envoyer la couverture de code à Coveralls. Je peux alors connaitre mon taux de couverture sur Coveralls, et analyser les lignes non couvertes :</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/coveralls_lignes_non_couvertes.png" alt="Lignes non couvertes sur Coveralls" /></p>
+<p><img src="../images/20180624/coveralls.png" alt="Lignes non couvertes sur Coveralls" /></p>
 <p>Dans mon cas, il s'agit d'un cas bien particulier : la gestion d'une exception en cas d'échec de communication SSL avec les serveurs d'Amazon. C'est donc difficile à tester de manière automatique (car ça n'est pas systématique).
 On peut néanmoins simuler ce comportement pour les tests à l'aide de <a href="#mock"><strong>Mock</strong></a>.</p>
-<p><img src="/assets/article_images/2018-06-24-comment-j-automatise-mes-tests-avec-pytest-travis-et-coveralls/badges_github.png" alt="Badges sur Github" /></p>
+<p><img src="../images/20180624/badges.png" alt="Badges sur Github" /></p>
 <p><strong>BONUS</strong> : Vous pouvez alors afficher fièrement l'état des tests et la couverture de votre code, sur la page Github de votre projet. Les badges seront mis à jour dynamiquement à chaque modification de votre programme.</p>
-<p><img src="https://media.giphy.com/media/vq4q4LqJv3Qcg/giphy.gif" alt="Test successful" /></p>
-<p>Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail <a href="http://bit.ly/newsletter-tducret">en vous inscrivant à la newsletter</a></p>
 
 <footer></footer>
 </html>

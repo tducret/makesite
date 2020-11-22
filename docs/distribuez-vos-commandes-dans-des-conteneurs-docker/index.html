@@ -2,22 +2,97 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>Distribuez vos commandes dans des conteneurs Docker - tducret.com</title>
-<link rel="stylesheet" href="/makesite/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="/makesite/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>Distribuez vos commandes dans des conteneurs Docker</h1>
 <p>Vous avez déjà voulu <strong>partager un de vos programmes</strong> ?</p>
 <p>Pas facile de le faire fonctionner sur différents systèmes d'exploitation. Pas évident de connaitre toutes les choses à installer avant pour pouvoir s'en servir.</p>
 <p>Dans cet article, je vais vous expliquer comment convertir une commande en un conteneur Docker.</p>
 <p><strong>Fini l'aléatoire</strong>, le conteneur s'exécutera de la même manière à chaque fois, et s'installera sur n'importe quel ordinateur en une ligne de commande.</p>
 <h1>Docker?</h1>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/docker.png" alt="Docker" /></p>
 <blockquote>
 <p>« Docker est un outil qui peut empaqueter une application et ses dépendances dans un conteneur isolé, qui pourra être exécuté sur n'importe quel serveur ». Ceci permet d'étendre la flexibilité et la portabilité d’exécution d'une application, que ce soit sur la machine locale, un cloud privé ou public, une machine nue, etc. <a href="https://fr.wikipedia.org/wiki/Docker_%28logiciel%29">(source Wikipedia)</a></p>
 </blockquote>
@@ -26,7 +101,6 @@
 <p>Pour créer une image Docker (le modèle de vos conteneurs), on écrit un fichier <strong>Dockerfile</strong>. On prend une image de base comme point de départ (par exemple un OS Ubuntu), et l'on décrit les étapes à dérouler pour installer votre commande.</p>
 <p>Dans cet article, nous allons créer l'image Docker d'une commande Python 3.</p>
 <p>On va donc rechercher une image de départ qui contient Python 3 sur <a href="https://store.docker.com">le store Docker</a> (le catalogue des images Docker).</p>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/docker_store.png" alt="Docker store" /></p>
 <p>Un clic sur <strong>View Available Tags</strong> nous permet de voir les versions disponibles. Pour cet exemple, on choisit l'image <code>python:3</code></p>
 <p>Ainsi, le Dockerfile commencera par la ligne d'import suivante :</p>
 <pre><code class="language-dockerfile">FROM python:3
@@ -54,30 +128,28 @@ ENTRYPOINT [ &quot;amazon2csv.py&quot; ]
 <pre><code class="language-bash">docker build -t amazon2csv .
 </code></pre>
 <p>où <em>amazon2csv</em> est le nom de l'image que je souhaite créer.</p>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/build_successful.png" alt="La construction de l'image s'est bien déroulée" /></p>
+<p><img src="../images/20180704/build.png" alt="La construction de l'image s'est bien déroulée" /></p>
 <h1>Test de lancement d'un conteneur</h1>
 <p>Pour vérifier le fonctionnement du conteneur, on lance dans le terminal la commande suivante :</p>
 <pre><code class="language-bash">docker run -it --rm amazon2csv --help
 </code></pre>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/help_commande.png" alt="Lancement du conteneur" /></p>
 <p>On obtient bien l'aide de la commande amazon2csv.py.</p>
 <p>On peut également utiliser la commande pour faire une recherche sur Amazon des 10 premiers livres liés au développement Python (plus d'infos sur <a href="https://github.com/tducret/amazon-scraper-python/">la page du projet amazon-scraper-python</a>)</p>
 <pre><code class="language-bash">docker run -it --rm amazon2csv --keywords=&quot;Python programming&quot; --maxproductnb=10
 </code></pre>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/test_recherche_python_amazon2csv.png" alt="Recherche de &quot;Python programming&quot; sur Amazon" /></p>
+<p><img src="../images/20180704/amazon2csv.png" alt="Recherche de &quot;Python programming&quot; sur Amazon" /></p>
 <p><strong>Ça fonctionne !</strong></p>
 <h2>Faciliter l'utilisation grâce à un alias</h2>
 <p>Pour ne pas avoir à taper systématiquement la commande de lancement du conteneur, on peut créer un <strong>alias</strong>. Pour cela, on ajoute dans son fichier <code>~/.bashrc</code> ou <code>~/.bash_profile</code> la ligne :</p>
 <pre><code class="language-bash">alias amazon2csv=&quot;docker run -it --rm amazon2csv&quot;
 </code></pre>
 <p>Quittez le terminal, et relancez-le (pour charger ce nouvel alias). Vous pouvez désormais démarrer un conteneur en tapant uniquement <em>amazon2csv</em>.</p>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/lancement_conteneur_via_alias.png" alt="Lancement du conteneur avec l'alias" /></p>
+<p><img src="../images/20180704/alias.png" alt="Lancement du conteneur avec l'alias" /></p>
 <h2>Une autre option</h2>
 <p>Si vous souhaitez partager votre commande avec d'autres personnes, ou l'utiliser sur d'autres ordinateurs, vous pouvez publier votre image sur le <a href="https://hub.docker.com/">Docker Hub</a>.</p>
 <blockquote>
 <p>Pour en savoir plus, vous pouvez lire la partie <em>Publier des images sur Docker Hub</em> de l'article <a href="https://lucasvidelaine.wordpress.com/2018/01/29/utilisation-de-dockerhub/">Utilisation de Docker Hub</a>.</p>
 </blockquote>
-<p><img src="/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/amazon2csv_sur_docker_hub.png" alt="amazon2csv sur Docker Hub" /></p>
 <p>Une fois sur le hub, la récupération de votre image est alors très facile. Par notre exemple :</p>
 <pre><code class="language-bash">docker pull thibdct/amazon2csv
 </code></pre>
@@ -142,9 +214,8 @@ user	0m0.830s
 sys	0m0.100s
 </code></pre>
 <p>Le temps d'exécution est donc plus long lorsque la commande est dans un conteneur <em>(mais personne n'est surpris)</em>.</p>
-<p>L'écart de <strong>1,6 seconde</strong> semble se maintenir entre l'exécution directe et celle via un conteneur. Cela correspond certainement au temps de démarrage du conteneur sur mon ordinateur <em>(vous aurez peut-être une meilleure performance chez vous)</em>.</p>
+<p>L'écart de <strong>1,6 secondes</strong> semble se maintenir entre l'exécution directe et celle via un conteneur. Cela correspond certainement au temps de démarrage du conteneur sur mon ordinateur <em>(vous aurez peut-être une meilleure performance chez vous)</em>.</p>
 <p>A vous de juger si cette perte de performance est acceptable, mais il faut bien sûr la mettre en balance avec le gain de temps sur le plan de la facilité de déploiement de la commande.</p>
-<p><img src="https://media.giphy.com/media/6AFldi5xJQYIo/giphy.gif" alt="Container management" /></p>
 
 <footer></footer>
 </html>

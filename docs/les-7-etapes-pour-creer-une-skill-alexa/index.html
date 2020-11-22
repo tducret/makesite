@@ -2,15 +2,91 @@
 <link rel="icon" href="data:;base64,=">
 <meta charset="utf-8">
 <title>Les 7 étapes pour créer une skill Alexa - tducret.com</title>
-<link rel="stylesheet" href="/makesite/style.css">
-
+<style>html { background-color: #f4f3ec; }
+    header {text-align: center;}
+    body {
+        background-color: #ffffff;
+        margin: auto;
+        max-width: 700px;
+        padding: 5px 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color: #444;
+    }
+    nav {padding-bottom: 30px}
+    nav a {text-decoration: none; font-weight: bold ; color:#8b0000}
+    h1.logo {
+        font-family: monospace, 'Courier New', Courier;
+        font-size: 40px;
+    }
+    h1, h2, h3 {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #000
+    }
+    h3 {
+        font-size: 22px;
+        padding-top: 30px;
+    }
+    h2 {
+        color: #000;
+        padding-top: 10px;
+    }
+    p {line-height: 1.42;}
+    p a {color: #444}
+    h3 a {
+        text-decoration: none;
+        color: #000;
+    }
+    footer {padding-top: 50px;}
+    pre code {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace, 'Courier New', Courier;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
+    code {
+        font-size: 15px;
+        border: 1px solid #e8e8e8;
+        border-radius: 3px;
+        background-color: #f4f4f4;
+        padding: 1px 5px;
+    }
+    blockquote {
+        font-style: italic;
+        border-left: 3px solid #57ad68;
+        margin-left: 0;
+        padding-left: 25px;}
+    hr {
+        width: 15%;
+        margin: 30px auto;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+    }
+    .wider {
+        width: 80%;
+        margin-top: 5px;
+    }
+    img {
+        max-width: 100%;
+        margin: 0 auto;
+        margin-top: 43px;
+        display: block;
+    }
+</style>
 <header>
     <h1 class="logo">[td]</h1>
     <nav><a href="/makesite/">Accueil</a> | <a href="https://github.com/tducret" target="_blank">Github</a> | <a href="https://www.linkedin.com/in/thibaultducret" target="_blank">Linkedin</a> | <a href="https://visualping.io/?url=tducret.com&mode=text" target="_blank" title="Soyez notifié des nouveaux articles">🔔</a></nav>
 </header>
-
 <hr class="wider">
-
 <h1>Les 7 étapes pour créer une skill Alexa</h1>
 <p>Les assistants vocaux sont de plus en plus présents dans nos vies. Google Home, Siri, Alexa : les géants du web ont tous développé leur solution. Les services offerts par ces assistants se multiplient. <em>Dans le jargon d'Amazon, ces services sont appelés <strong>skills</strong>.</em> Il existe des skills pour écouter la radio, piloter votre installation domotique... et même demander une <a href="http://www.blague-chuck-norris.fr/page1.html">blague de Chuck Norris</a>.</p>
 <p>Aujourd'hui, il en existe plus de 10 000 aux Etats-Unis. En France, tout reste à faire. Nous sommes à un moment clé de ce nouveau marché <em>(un peu comme quand <a href="https://www.youtube.com/watch?v=xo9cKe_Fch8">Steve Jobs avait annoncé aux développeurs l'ouverture de l'App Store sur iPhone</a>)</em>.</p>
@@ -20,15 +96,6 @@
 <p>Nota : il n'est pas nécessaire d'avoir une enceinte connectée pour développer une skill et la tester</p>
 </blockquote>
 <hr />
-<h4>📖 Table des matières</h4>
-<p><a href="#%C3%89tape-1---trouver-une-id%C3%A9e">Étape 1 - Trouver une idée</a></p>
-<p><a href="#%C3%89tape-2---d%C3%A9finir-linteraction">Étape 2 - Définir l'interaction</a></p>
-<p><a href="#%C3%89tape-3---configurer-linteraction">Étape 3 - Configurer l'interaction</a></p>
-<p><a href="#%C3%89tape-4---coder-la-fonction">Étape 4 - Coder la fonction</a></p>
-<p><a href="#%C3%89tape-5---charger-la-fonction-sur-lambda">Étape 5 - Charger la fonction sur Lambda</a></p>
-<p><a href="#%C3%89tape-6---tester">Étape 6 - Tester</a></p>
-<p><a href="#%C3%89tape-7---publier-votre-skill-sur-amazon-store">Étape 7 - Publier votre skill sur Amazon store</a></p>
-<hr />
 <h1>Étape 1 - Trouver une idée</h1>
 <p>Toutes les idées ne sont pas forcément adaptées pour un assistant vocal.</p>
 <p>D'après Amazon, votre projet est <strong>intéressant pour Alexa</strong> si c'est un service :</p>
@@ -37,7 +104,6 @@
 <li>Facile</li>
 <li>Fun</li>
 </ul>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/store_france.png" alt="Boutique de skills Alexa en France" /></p>
 <p>Pour vous inspirer, vous pouvez aller jeter un oeil sur le store <a href="https://www.amazon.fr/alexa-skills/b/ref=sd_allcat_k_a2s_all?ie=UTF8&amp;node=13944548031">français</a>, <a href="https://www.amazon.co.uk/alexa-skills/b/ref=nav_shopall_k_a2s_all?ie=UTF8&amp;node=10068517031">anglais</a> ou <a href="https://www.amazon.com/alexa-skills/b/ref=sd_allcat_ods_ha_con_skills_st?ie=UTF8&amp;node=13727921011">américain</a>.</p>
 <h1>Étape 2 - Définir l'interaction</h1>
 <p>Lorsque vous créez un <strong>logiciel classique</strong>, vous définissez les entrées et sorties de vos fonctions.</p>
@@ -66,13 +132,12 @@ Je ne vais pas détailler la partie création de compte, mais voici les liens ut
 <p>Rendez-vous sur le <a href="https://developer.amazon.com/alexa/console/ask">portail de développement Alexa</a>, où nous allons créer cette nouvelle skill.</p>
 <p>Cliquez sur le bouton <strong>Create Skill</strong>, entrez le nom souhaité, la langue, et laissez l'option <strong>Custom</strong> sélectionnée.</p>
 <p>Cliquez alors de nouveau sur le bouton <strong>Create Skill</strong>.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/creation_skill.png" alt="Fenêtre de création de la skill Alexa" /></p>
 <p>Vous arrivez à la fenêtre de configuration de skill suivante :</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/accueil_console_creation_skill.png" alt="Console de développement de votre skill" /></p>
+<p><img src="../images/20181008/consoleskill.png" alt="Console de développement de votre skill" /></p>
 <h3>Définition de l'invocation</h3>
 <p>Pour commencer, nous allons choisir le ou les mots que l'utilisateur devra prononcer pour appeler la skill.</p>
 <p>Cliquez sur <strong>Invocation</strong> dans le menu de gauche, saisissez votre choix (ici : <em>bus toulouse</em>), et cliquez sur <strong>Save Model</strong> pour sauvegarder.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/invocation_skill.png" alt="Choix de l'invocation de la skill" /></p>
+<p><img src="../images/20181008/invocation.png" alt="Choix de l'invocation de la skill" /></p>
 <p>Cela va permettre d'appeler votre skill en disant par exemple :</p>
 <ul>
 <li>Alexa, ouvre la skill <em>Bus Toulouse</em></li>
@@ -85,7 +150,6 @@ Je ne vais pas détailler la partie création de compte, mais voici les liens ut
 <p>Pour tout le jargon linguistique d'Amazon, j'ai créé un lexique <a href="#lexique">ici</a></p>
 </blockquote>
 <p>Dans le menu de gauche, à côté de <em>Intents</em>, cliquez sur <strong>Add</strong>. Donnez-lui un nom (par exemple : <code>demande_prochains_passages_a_un_arret</code>) et cliquez sur <strong>Create custom intent</strong>.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/ajout_intent.png" alt="Ajout d'un intent" /></p>
 <p>Dans <em>Sample Utterances</em>, vous pouvez désormais entrer les phrases possibles. <em>Utterance</em> signifie en français <em>énoncé</em> ou <em>déclaration</em>.</p>
 <p>Pour notre exemple, nous pouvons reprendre les questions définies plus haut... <strong>à un détail près.</strong></p>
 <p>Et oui, l'utilisateur ne va pas demander les prochains passages à <em>Ramonville</em> à chaque fois.</p>
@@ -94,18 +158,17 @@ Je ne vais pas détailler la partie création de compte, mais voici les liens ut
 <blockquote>
 <p>Nota : Amazon ne veut pas du point d'interrogation dans nos questions</p>
 </blockquote>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/ajout_utterance.png" alt="Ajout d'une utterance avec un slot" /></p>
+<p><img src="../images/20181008/utterance.png" alt="Ajout d'une utterance avec un slot" /></p>
 <p>La console de développement détecte que le slot <code>{arret_bus}</code> n'existe pas encore. On clique sur <strong>Add</strong>.</p>
 <p>On entre alors les deux autres phrases :</p>
 <ul>
 <li>Quand passe le prochain bus à l'arrêt <code>{arret_bus}</code></li>
 <li>Prochain bus à l'arrêt <code>{arret_bus}</code></li>
 </ul>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/fin_ajout_utterances.png" alt="A la fin de la saisie des utterances" /></p>
+<p><img src="../images/20181008/utterance2.png" alt="A la fin de la saisie des utterances" /></p>
 <h3>Définition du type de slot</h3>
 <p>On voit dans la capture précédente que le slot <code>{arret_bus}</code> n'a pas de <em>Slot type</em> associé.</p>
 <p>On peut regarder les types disponibles en français. <em>Et oui, ils sont spécifiques à chaque langue. Il y aura donc probablement plus de types de slots en anglais.</em></p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/slot_types.png" alt="Types de slots" /></p>
 <blockquote>
 <p>Vous trouverez plus d'infos sur les types standards d'Amazon sur la page <a href="https://developer.amazon.com/fr/docs/custom-skills/slot-type-reference.html">Slot type reference</a></p>
 </blockquote>
@@ -116,7 +179,7 @@ Je ne vais pas détailler la partie création de compte, mais voici les liens ut
 <blockquote>
 <p>Il est également possible d'ajouter une longue liste ou un fichier csv, en cliquant sur le bouton <strong>Bulk Edit</strong>.</p>
 </blockquote>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/definition_slot_type.png" alt="Définition des valeurs du type de slot" /></p>
+<p><img src="../images/20181008/slottype.png" alt="Définition des valeurs du type de slot" /></p>
 <p>Sauvegardez ce type en cliquant sur le bouton du haut <strong>Save Model</strong>.</p>
 <p>Vous pouvez alors retourner sur l'<em>intent</em> <code>demande_prochains_passages_a_un_arret</code> <em>(en cliquant dessus dans le menu de gauche, sous <strong>Intents</strong>)</em>.</p>
 <p>Puis, sélectionnez le type de slot <strong>liste_arrets_bus</strong> pour le slot <code>{arret_bus}</code>.</p>
@@ -177,12 +240,10 @@ aucun passage prévu à l'arrêt {}.&quot;.format(arret_bus_demande)
     return handler_input.response_builder.response
 </code></pre>
 <p>Si vous voulez voir le code complet, allez sur la page du projet <a href="https://github.com/tducret/alexa-skill-bus-toulouse">bus toulouse</a> ou directement sur le code <a href="https://github.com/tducret/alexa-skill-bus-toulouse/blob/master/bus_toulouse.py">bus_toulouse.py</a>.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/cookiecutter.png" alt="Cookiecutter" />
-Si vous connaissez <a href="https://github.com/audreyr/cookiecutter">Cookiecutter</a>, j'ai créé un template <a href="https://github.com/tducret/cookiecutter-alexa-skill-python">Alexa skill en Python</a> pour créer un nouveau projet rapidement.</p>
+<p>Si vous connaissez <a href="https://github.com/audreyr/cookiecutter">Cookiecutter</a>, j'ai créé un template <a href="https://github.com/tducret/cookiecutter-alexa-skill-python">Alexa skill en Python</a> pour créer un nouveau projet rapidement.</p>
 <h1>Étape 5 - Charger la fonction sur Lambda</h1>
 <p>Lambda permet d'héberger des fonctions dans le cloud d'Amazon. Pas besoin d'allouer de serveur, de configurer des OS, de faire du load balancing, etc. Vous vous contentez de charger votre fonction (ici notre application Alexa) et Lambda vous fournit une url unique pour l'appeler.</p>
 <p>Mieux, comme Lambda et Alexa sont développés par Amazon, leur intégration est facilitée.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/lambda.png" alt="Amazon Lambda" /></p>
 <h3>Création de la fonction Lambda</h3>
 <p>Connectez-vous sur <a href="https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions">la console Lambda</a>.</p>
 <blockquote>
@@ -201,17 +262,16 @@ Si vous connaissez <a href="https://github.com/audreyr/cookiecutter">Cookiecutte
 <p>Patientez quelques instants pendant la création de la fonction.</p>
 <h3>Configuration</h3>
 <p>Une fois sur la page de la fonction, cliquez sur <strong>Alexa Skills Kit</strong> dans le menu de gauche <strong>Ajouter des déclencheurs</strong>.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/configuration_lambda.png" alt="Configuration Lambda" /></p>
+<p><img src="../images/20181008/lambda.png" alt="Configuration Lambda" /></p>
 <p>Vous devrez alors ajouter l'identifiant de votre skill et cliquer sur <strong>Ajouter</strong>.</p>
 <p>Cet identifiant peut être récupéré dans le menu <strong>Endpoint</strong> de la console de développement Alexa (pas Lambda).</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/selection_endpoint.png" alt="Sélection du menu Endpoint sur la console de développement Alexa" /></p>
 <p>C'est le champ <strong>Your Skill ID</strong> dans <em>AWS Lambda ARN</em>.</p>
 <p>Vous devriez avoir quelque-chose qui ressemble à ça.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/configuration_declencheur_Lambda.png" alt="Configuration du déclencheur sur Lambda" /></p>
+<p><img src="../images/20181008/declencheur.png" alt="Configuration du déclencheur sur Lambda" /></p>
 <p>En retour, vous pouvez configurer l'identifiant de le fonction Lambda dans la console de développement Alexa.</p>
 <p>L'identifiant de la fonction peut être obtenu en haut à droite de la console Lambda (du type : <em>arn:aws:lambda:eu-west...</em>)</p>
 <p>Votre console de développement Alexa devrait alors ressembler à ça :</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/configuration_endpoint.png" alt="Configuration du endpoint sur la console de développement Alexa" /></p>
+<p><img src="../images/20181008/confendpoint.png" alt="Configuration du endpoint sur la console de développement Alexa" /></p>
 <p>N'oubliez pas de cliquer sur le bouton <strong>Save Endpoints</strong>.</p>
 <h3>Ajout du code</h3>
 <p>Plus bas, vous trouverez la partie <strong>Code de fonction</strong>. C'est ici que vous allez charger votre application.</p>
@@ -224,7 +284,7 @@ Si vous connaissez <a href="https://github.com/audreyr/cookiecutter">Cookiecutte
 <p>Une fois chargée, vous pouvez cliquer sur <strong>Enregistrer</strong> en haut à droite pour sauvegarder la fonction.</p>
 <h1>Étape 6 - Tester</h1>
 <p>Pour tester une skill, cliquez sur le bouton <strong>Test</strong> dans la barre du haut de la console de développement Alexa.</p>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/test_console_alexa.png" alt="Test sur la console de développement Alexa" /></p>
+<p><img src="../images/20181008/console.png" alt="Test sur la console de développement Alexa" /></p>
 <p>Vous pouvez alors interagir avec votre skill à l'écrit ou avec votre micro.</p>
 <p><a href="https://developer.amazon.com/fr/docs/devconsole/test-your-skill.html">Cette page Amazon</a> détaille les possibilités offertes par ce simulateur.</p>
 <h1>Étape 7 - Publier votre skill sur Amazon store</h1>
@@ -235,15 +295,12 @@ Si vous connaissez <a href="https://github.com/audreyr/cookiecutter">Cookiecutte
 <blockquote>
 <p>Astuce : pour créer facilement et rapidement une icône de skill Alexa (ronde, avec les 2 tailles demandées). Amazon a créé <a href="https://developer.amazon.com/fr/docs/tools/icon-builder.html">Icon Builder</a></p>
 </blockquote>
-<p><img src="/assets/article_images/2018-10-08-les-7-etapes-pour-creer-une-skill-alexa/publication_skill.png" alt="Publication de la skill sur Amazon" /></p>
+<p><img src="../images/20181008/publication.png" alt="Publication de la skill sur Amazon" /></p>
 <p><a href="https://developer.amazon.com/fr/docs/custom-skills/certification-requirements-for-custom-skills.html">Cette page</a> rappelle les contraintes à respecter pour publier votre skill.</p>
 <hr />
 <p>Voilà, il ne reste plus qu'à patienter quelques heures pour que les équipes d'Amazon certifient votre skill.</p>
 <p>Vous la verrez alors apparaitre sur le store un peu plus tard.</p>
 <p>N'hésitez pas à tester <a href="https://www.amazon.fr/gp/product/B07HFC8NHF">Bus Toulouse</a> et laissez un avis <a href="https://www.amazon.fr/review/create-review/ref=cm_cr_dp_d_wr_but_btm?ie=UTF8&amp;channel=glance-detail&amp;asin=B07HFC8NHF">⭐⭐⭐⭐⭐</a></p>
-<hr />
-<p>Retour à la <a href="#-table-des-mati%C3%A8res">📖 table des matières</a></p>
-<p>Si vous ne voulez manquer aucun article, soyez notifié directement dans votre boite mail <a href="http://bit.ly/newsletter-tducret">en vous inscrivant à la newsletter</a></p>
 
 <footer></footer>
 </html>
