@@ -10,8 +10,6 @@ Dans cet article, je vais vous expliquer comment convertir une commande en un co
 
 # Docker?
 
-![Docker](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/docker.png)
-
 > « Docker est un outil qui peut empaqueter une application et ses dépendances dans un conteneur isolé, qui pourra être exécuté sur n'importe quel serveur ». Ceci permet d'étendre la flexibilité et la portabilité d’exécution d'une application, que ce soit sur la machine locale, un cloud privé ou public, une machine nue, etc. [(source Wikipedia)](https://fr.wikipedia.org/wiki/Docker_%28logiciel%29)
 
 Si vous voulez en savoir plus, je vous invite à lire l'article [Docker pour les nuls](https://www.cachem.fr/docker-revolution-conteneur/).
@@ -23,8 +21,6 @@ Pour créer une image Docker (le modèle de vos conteneurs), on écrit un fichie
 Dans cet article, nous allons créer l'image Docker d'une commande Python 3.
 
 On va donc rechercher une image de départ qui contient Python 3 sur [le store Docker](https://store.docker.com) (le catalogue des images Docker).
-
-![Docker store](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/docker_store.png)
 
 Un clic sur **View Available Tags** nous permet de voir les versions disponibles. Pour cet exemple, on choisit l'image `python:3`
 
@@ -70,7 +66,7 @@ docker build -t amazon2csv .
 
 où *amazon2csv* est le nom de l'image que je souhaite créer.
 
-![La construction de l'image s'est bien déroulée](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/build_successful.png)
+![La construction de l'image s'est bien déroulée](../images/20180704/build.png)
 
 # Test de lancement d'un conteneur
 
@@ -80,8 +76,6 @@ Pour vérifier le fonctionnement du conteneur, on lance dans le terminal la comm
 docker run -it --rm amazon2csv --help
 ```
 
-![Lancement du conteneur](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/help_commande.png)
-
 On obtient bien l'aide de la commande amazon2csv.py.
 
 On peut également utiliser la commande pour faire une recherche sur Amazon des 10 premiers livres liés au développement Python (plus d'infos sur [la page du projet amazon-scraper-python](https://github.com/tducret/amazon-scraper-python/))
@@ -90,7 +84,7 @@ On peut également utiliser la commande pour faire une recherche sur Amazon des 
 docker run -it --rm amazon2csv --keywords="Python programming" --maxproductnb=10
 ```
 
-![Recherche de "Python programming" sur Amazon](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/test_recherche_python_amazon2csv.png)
+![Recherche de "Python programming" sur Amazon](../images/20180704/amazon2csv.png)
 
 **Ça fonctionne !**
 
@@ -104,15 +98,13 @@ alias amazon2csv="docker run -it --rm amazon2csv"
 
 Quittez le terminal, et relancez-le (pour charger ce nouvel alias). Vous pouvez désormais démarrer un conteneur en tapant uniquement *amazon2csv*.
 
-![Lancement du conteneur avec l'alias](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/lancement_conteneur_via_alias.png)
+![Lancement du conteneur avec l'alias](../images/20180704/alias.png)
 
 ## Une autre option
 
 Si vous souhaitez partager votre commande avec d'autres personnes, ou l'utiliser sur d'autres ordinateurs, vous pouvez publier votre image sur le [Docker Hub](https://hub.docker.com/). 
 
 > Pour en savoir plus, vous pouvez lire la partie *Publier des images sur Docker Hub* de l'article [Utilisation de Docker Hub](https://lucasvidelaine.wordpress.com/2018/01/29/utilisation-de-dockerhub/).
-
-![amazon2csv sur Docker Hub](/assets/article_images/2018-07-04-distribuez-vos-commandes-dans-des-conteneurs-docker/amazon2csv_sur_docker_hub.png)
 
 Une fois sur le hub, la récupération de votre image est alors très facile. Par notre exemple :
 
@@ -221,8 +213,6 @@ sys	0m0.100s
 
 Le temps d'exécution est donc plus long lorsque la commande est dans un conteneur *(mais personne n'est surpris)*.
 
-L'écart de **1,6 seconde** semble se maintenir entre l'exécution directe et celle via un conteneur. Cela correspond certainement au temps de démarrage du conteneur sur mon ordinateur *(vous aurez peut-être une meilleure performance chez vous)*.
+L'écart de **1,6 secondes** semble se maintenir entre l'exécution directe et celle via un conteneur. Cela correspond certainement au temps de démarrage du conteneur sur mon ordinateur *(vous aurez peut-être une meilleure performance chez vous)*.
 
 A vous de juger si cette perte de performance est acceptable, mais il faut bien sûr la mettre en balance avec le gain de temps sur le plan de la facilité de déploiement de la commande.
-
-![Container management](https://media.giphy.com/media/6AFldi5xJQYIo/giphy.gif)
